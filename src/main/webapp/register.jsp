@@ -10,18 +10,16 @@
   <div class="header">Davey's Record Store</div>
   <div class="content">
     <div class="bg"></div>
-    <h1>Register here!</h1>
+    <h1>Create Account</h1>
     <form action="welcome.jsp" method="post">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text"/>
       <label for="email">Email</label>
       <input id="email" name="email" type="text"/>
       <label for="password">Password</label>
       <input id="password" name="password" type="password"/>
-      <label for="genre">Favourite Genre</label>
-      <select name="genre" id="genre">
-        <option value="Kpop">Kpop</option>
-        <option value="Hardstyle">Hardstyle</option>
-        <option value="Trash">Trash</option>
-      </select>
+      <label for="reenter-password">Re-enter Password</label>
+      <input id="reenter-password" name="password" type="password"/>
       <input type="submit" value="Register">
     </form>
   </div>
