@@ -20,6 +20,8 @@
       <input id="password" name="password" type="password"/>
       <label for="reenter-password">Re-enter Password</label>
       <input id="reenter-password" name="password" type="password"/>
+      <label for="tos">Agree to our <span style="color: dodgerblue; cursor: pointer">Terms of Service</span></label>
+      <input type="checkbox" id="tos" name="tos">
       <input type="submit" value="Register">
     </form>
   </div>
