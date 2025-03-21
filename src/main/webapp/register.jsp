@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <div class="header">Davey's Record Store</div>
+  <div class="header">IoTBay</div>
   <div class="content">
     <div class="bg"></div>
     <h1>Create Account</h1>
@@ -25,6 +25,6 @@
       <input type="submit" value="Register">
     </form>
   </div>
-  <div class="footer">Stylesheet is not to be used in assessable submissions</div>
+  <div class="footer"></div>
 </body>
 </html>
