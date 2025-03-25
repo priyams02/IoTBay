@@ -18,8 +18,6 @@
       <input id="email" name="email" type="text"/>
       <label for="password">Password</label>
       <input id="password" name="password" type="password"/>
-      <label for="re-password">Re-enter Password</label>
-      <input id="re-password" name="re-password" type="password"/>
       <label for="tos">Agree to our <span style="color: dodgerblue; cursor: pointer">Terms of Service</span></label>
       <input type="checkbox" id="tos" name="tos">
       <input type="submit" value="Register">
