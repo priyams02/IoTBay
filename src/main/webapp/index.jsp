@@ -18,9 +18,21 @@
             <!-- Top Menu Bar -->
             <nav>
                 <div>
-                    <div class ="navLinks left"><a href ="index.jsp">Home</a>
+                    <div class ="navLinks left"><a href ="index.jsp">Home</a></div>
+                    <%-- Some user authenthication for when they log in will be implemented later--%>
+
                 </div>
             </nav>
-        <h2>Hello IoTBay</h2>
+        <h1 class="IndexH1">IotBay</h1>
+        <!--Content Area -->
+        <div>
+            <p class="paragraph textarea">
+                IotBay | Introduction to Software Development Assignment 1:R0
+                <br><br>
+                The internet of Things Store (IoTBay) is a small company based in Sydney Australia.
+                IotBay wants to develop an online IoT devices ordering application to allow their customers
+                to purchase IoT devices
+            </p>
+        </div>
     </body>
 </html>
