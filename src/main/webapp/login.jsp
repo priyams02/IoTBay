@@ -1,12 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: priyam
-  Date: 18/3/2025
-  Time: 7:52 pm
-  To change this template use File | Settings | File Templates.
---%>
-<!-- login.jsp -->
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,18 +8,21 @@
 </head>
 <body>
 <div class="login-container">
-    <p><strong>Please Log-In to your IoTBay Account</strong></p>
+    <p><strong>Please Login to your IoTBay Account</strong></p>
     <h2>Login</h2>
-    <form action="loginServlet" method="post">
+
+    <form class="login-form">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required
+               autocomplete="off"
+               pattern="^(?=.*[A-Z])(?=.*[\W_]).{8,}$"
+               title="Password must be at least 8 characters long, include at least one uppercase letter, and one special character.">
 
         <button type="submit">Login</button>
     </form>
 </div>
 </body>
 </html>
-
