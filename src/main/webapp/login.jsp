@@ -16,6 +16,7 @@
 </head>
 <body>
 <div class="login-container">
+    <p><strong>Please Log-In to your IoTBay Account</strong></p>
     <h2>Login</h2>
     <form action="loginServlet" method="post">
         <label for="username">Username:</label>
