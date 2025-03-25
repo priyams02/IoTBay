@@ -21,7 +21,10 @@
                     <div class ="navLinks left"><a href ="index.jsp">Home</a></div>
                     <%-- Some user authenthication for when they log in will be implemented later--%>
 
-                </div>
+                <div class="navLinks right"><a href ="login.jsp">Login</a></div>
+
+                <div class="navLinks right"><a href ="register.jsp">Register</a></div>
+
             </nav>
         <h1 class="IndexH1">IotBay</h1>
         <!--Content Area -->
@@ -33,6 +36,7 @@
                 IotBay wants to develop an online IoT devices ordering application to allow their customers
                 to purchase IoT devices
             </p>
+        </div>
         </div>
     </body>
 </html>
