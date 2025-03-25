@@ -22,6 +22,9 @@
                     <%-- Some user authenthication for when they log in will be implemented later--%>
 
                 </div>
+                <div class="login" href ="login.jsp">Login</div>
+                <p>Currently logged in User</p>
+
             </nav>
         <h1 class="IndexH1">IotBay</h1>
         <!--Content Area -->
