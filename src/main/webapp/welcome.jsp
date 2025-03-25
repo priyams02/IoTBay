@@ -30,7 +30,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: whitesmoke;
+        color: white;
 
     }
     .search-box {
