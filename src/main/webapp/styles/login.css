@@ -49,3 +49,14 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.box{
+    box-sizing: border-box;
+    position: relative; overflow: hidden; cursor: pointer;
+
+    /* Flexbox Layout */
+    display: inline-flex;
+    justify-content: center;
+    align-content  : center;
+    align-items    : center;
+}

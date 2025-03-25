@@ -13,10 +13,10 @@
 
     <form class="login-form">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input class="box" type="text" id="username" name="username" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required
+        <input class="box" type="password" id="password" name="password" required
                autocomplete="off"
                pattern="^(?=.*[A-Z])(?=.*[\W_]).{8,}$"
                title="Password must be at least 8 characters long, include at least one uppercase letter, and one special character.">
