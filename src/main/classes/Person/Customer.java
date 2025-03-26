@@ -1,4 +1,4 @@
-package classes.Person;
+package classes.person;
 
 import java.io.serializable;
 import java.util.ArrayList;

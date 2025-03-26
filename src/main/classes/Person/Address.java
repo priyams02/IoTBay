@@ -1,4 +1,4 @@
-package classes.Person;
+package classes.person;
 
 /**
  * An Address defined by number, street name, suburb, postcode, state and
