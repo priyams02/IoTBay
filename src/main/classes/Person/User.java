@@ -1,4 +1,4 @@
-package classes.person;
+package classes.Person;
 
 import java.io.serializable;
 
