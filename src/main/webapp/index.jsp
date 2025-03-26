@@ -26,6 +26,7 @@
                 <p>Currently logged in User</p>
 
             </nav>
+
         <h1 class="IndexH1">IotBay</h1>
         <!--Content Area -->
         <div>
