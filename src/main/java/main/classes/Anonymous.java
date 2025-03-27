@@ -1,14 +1,16 @@
 package main.classes;
 
+import java.io.Serializable;
+
 public class Anonymous implements Serializable {
     private int id;
     private String phoneNumber;
-    // private Address address
-    // private PaymentInformation payment
+    // private Address address;
+    // private PaymentInformation payment;
 
-    public anonymous() {}
+    public Anonymous() {}
 
-    public anonymous(int id, String phoneNumber) {
+    public Anonymous(int id, String phoneNumber) {
         this.id = id;
         this.phoneNumber = phoneNumber;
     }

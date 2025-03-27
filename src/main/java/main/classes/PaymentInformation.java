@@ -1,30 +1,31 @@
-package classes;
+package main.classes;
 
-import java.io.serializable;
+import java.io.Serializable;
 import java.util.Date;
 
 /*
-Card details
-
- */
-
-public class Payment information implements serializable{
+ Card Details
+*/
+public class PaymentInformation implements Serializable {
     private String cardNo;
     private String cvv;
     private String cardHolder;
     private Date expiryDate;
 
-    //constructor with parameters
-    public PaymentInformation(String cardNo,String cvv,String cardHolder){
+    // constructor with parameters
+    public PaymentInformation(String cardNo, String cvv, String cardHolder, Date expiryDate) {
         this.cardNo = cardNo;
         this.cvv = cvv;
         this.cardHolder = cardHolder;
+        this.expiryDate = expiryDate;
     }
-    //default constructor
-    public PaymentInformation(){
-        this("","","",null);
+
+    // default constructor
+    public PaymentInformation() {
+        this("", "", "", null);
     }
-    //getters
+
+    // getters
     public String getCardNo() {
         return cardNo;
     }
@@ -41,7 +42,7 @@ public class Payment information implements serializable{
         return expiryDate;
     }
 
-    //setters
+    // setters
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
