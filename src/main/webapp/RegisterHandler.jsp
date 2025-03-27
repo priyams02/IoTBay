@@ -1,4 +1,5 @@
 <%@ page import="main.classes.User" %>
+<%@ page import="main.classes.UserDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -8,20 +9,19 @@
     String password = request.getParameter("password");
     String tos = request.getParameter("tos");
 
-    // Check if TOS is accepted (optional)
     if (tos == null) {
         response.sendRedirect("register.jsp?error=tos");
     } else {
-        // Create user object using the default constructor
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
 
-        // Save user in session (mocking "logged in" state)
+        UserDAO.addUser(user);
+
+        // Save user in session (so they're "logged in" right away)
         session.setAttribute("loggedInUser", user);
 
-        // Redirect to index.jsp (or welcome.jsp) on success
         response.sendRedirect("index.jsp");
     }
 %>
