@@ -1,4 +1,4 @@
-package classes;
+package main.classes;
 
 import java.io.serializable;
 
@@ -51,6 +51,10 @@ public class User implements serializable {
     }
     public UserType getType(){
         return type;
+    }
+    public String setEmail(){this.email=email;}
+    public String setPassword(){
+        this.password=password;
     }
     public enum UserType {
         CUSTOMER,
