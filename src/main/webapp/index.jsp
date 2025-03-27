@@ -22,7 +22,7 @@
                     <%-- Some user authenthication for when they log in will be implemented later--%>
 
                 <div class="navLinks right"><a href ="login.jsp">Login</a></div>
-
+                    <div class="navLinks right"><a href ="shop.jsp">Shop</a></div>
                 <div class="navLinks right"><a href ="register.jsp">Register</a></div>
 
             </nav>
