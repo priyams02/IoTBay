@@ -1,6 +1,4 @@
-*
-        * @author Bryce
- */
+package main.classes;
 public class Address {
 
     private String number;
