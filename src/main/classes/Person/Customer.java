@@ -10,7 +10,7 @@ public class Customer extends User implements Serializable{
 //    Possible future parameters or edited
 //    private ArrayList<Order> purchaseHistory;
 //    private PaymentInformation payment;
-//    private boolean isRegistered;
+    private boolean isRegistered;
 
     public Customer(String firstName, String lastName, String password, String email) {
         super(firstName, lastName, password, email, UserType.Customer);
