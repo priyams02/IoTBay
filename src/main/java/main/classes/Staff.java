@@ -1,8 +1,8 @@
-package classes.person;
+package main.classes;
 
-import java.io.serializable;
+import java.io.Serializable;
 
-public class Staff extends User implements serializable{
+public class Staff extends User implements Serializable{
     private String role;
 
     public Staff(String firstName, String lastName, String password, String email) {
