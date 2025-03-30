@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    text-align: center;
+    position: relative;
+    min-height: 100vh;
+}
+.navbar {
+    background: #232f3e;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.logout-container {
+    margin-top: 100px;
+}
+.logout-text h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #232f3e;
+}
+.logout-text p {
+    font-size: 1.2em;
+    color: #333;
+}
+.login-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    color: white;
+    background: #232f3e;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.login-button:hover {
+    background: #37475a;
+}

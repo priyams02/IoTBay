@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+nav {
+    background: #232f3e;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.navLinks a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.2em;
+}
+
+.navLinks a:hover {
+    color: #f0c14b;
+}
+
+.IndexH1 {
+    font-size: 2.5em;
+    margin-top: 20px;
+    color: #232f3e;
+}
+
+.paragraph.textarea {
+    font-size: 1.2em;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login {
+    font-size: 1.2em;
+    margin-top: 400px;
+    background: #37475a;
+    color: white;
+    padding: 15px 30px;
+}
+
+.login p {
+    margin: 0;
+}
+
+
