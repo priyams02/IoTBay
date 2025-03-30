@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="styles/login.css">
 </head>
 <body>
+<%--needto add navbar here--%>
 <div class="login-container">
     <p><strong>Please Login to your IoTBay Account</strong></p>
     <h2>Login</h2>
