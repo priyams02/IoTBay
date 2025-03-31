@@ -11,14 +11,16 @@ public class User implements Serializable {
     private String password;
     private String email;
     private UserType type;
+    private Address address;
 
     // Parameterized constructor
-    public User(String firstName, String lastName, String password, String email, UserType type) {
+    public User(String firstName, String lastName, String password, String email,Address address,UserType type) {
         this.ID = totalUsers++;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.address = address;
         this.type = type;
     }
 
@@ -43,6 +45,7 @@ public class User implements Serializable {
     public UserType getType() {
         return type;
     }
+    public Address getAddress() { return address; }
 
     // New setters for registration
     public void setName(String name) {
