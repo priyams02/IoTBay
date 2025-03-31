@@ -48,9 +48,10 @@ public class User implements Serializable {
     public Address getAddress() { return address; }
 
     // New setters for registration
-    public void setName(String name) {
-        this.firstName = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
+    public void setLastName(String LastName) {this.lastName = lastName;}
     public void setEmail(String email) {
         this.email = email;
     }

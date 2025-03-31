@@ -1,20 +1,35 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DELBERT
-  Date: 25/03/2025
-  Time: 20:08
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="main.classes.User" %>
+<%@ page import="main.classes.Address" %>
+<%@ page import="main.classes.Staff" %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // Retrieve the logged-in user from session
+    User user = (User) session.getAttribute("loggedInUser");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>IoTBay - Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/shop.css">
+    <link rel="stylesheet" href="styles/IoTBayStyles.css">
 </head>
 <body>
-
+<nav class="navbar">
+    <div class="navLinks left">
+        <a href="index.jsp">Home</a>
+    </div>
+    <div class="navLinks right">
+        <a href="shop.jsp">Shop</a>
+        <% if (user == null) { %>
+        <a href="login.jsp">Login</a>
+        <a href="register.jsp">Register</a>
+        <% } else { %>
+        <a href="LogoutHandler.jsp">Logout</a>
+        <% } %>
+    </div>
+</nav>
 <header>
     <h1>IoTBay</h1>
     <p>Your one-stop shop for IoT products</p>

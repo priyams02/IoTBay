@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome Page</title>
-    <link rel="stylesheet" type="text/css" href="styles/welcome.css">
+    <link rel="stylesheet" type="text/css" href="styles/IoTBayStyles.css">
 
 </head>
 

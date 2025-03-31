@@ -20,7 +20,7 @@
 <div class="IndexDivMain">
     <!-- Top Menu Bar -->
     <!-- I think when we finish up the initial design let's make the nav bar horizontal instead of vertical -->
-    <nav>
+    <nav class="navbar">
         <div class="navLinks left">
             <a href="index.jsp">Home</a>
         </div>
@@ -47,34 +47,12 @@
             to purchase IoT devices.
         </p>
     </div>
-
-    <!-- Logged-in User Information -->
-    <div class="login">
-        <p>Logged in user:
-            <% if (user == null) { %>
-            No one
-            <% } else { %>
-            <%= user.getEmail() %>
-            <% } %>
-        </p>
-    </div>
-    <%
-        if (user != null) {
-    %>
-    <div class="user-box">
-        <a href="LogoutHandler.jsp"><button>LOGOUT</button></a>
-    </div>
-    <%
-        }
-    %>
-</div>
-    </div>
-<%--    Show up customer/User information--%>
+    <%--    Show up customer/User information--%>
     <div>
         <div class ="CentreScreen">
             <%
                 try {
-                    User active = (User) session.getAttribute("User");
+                    User active = (User) session.getAttribute("loggedInUser");
                     if (active != null) {
                         String firstName = active.getFirstName();
                         String lastName = active.getLastName();
@@ -82,7 +60,7 @@
                         if (firstName != null && lastName != null) {
                             out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
                         } else {
-                            out.println("<h1>Hello!</h1>");
+                            out.println("<h1>Hello Customer!</h1>");
                         }
 
                         out.println("<br><p class=\"text\">");
@@ -112,7 +90,18 @@
             %>
         </div>
 
+    <!-- Logged-in User Information -->
+    <div class="login">
+        <p>Logged in user:
+            <% if (user == null) { %>
+            No one
+            <% } else { %>
+            <%= user.getEmail() %>
+            <% } %>
+        </p>
+    </div>
 </div>
+    </div>
 </body>
 </html>
 
