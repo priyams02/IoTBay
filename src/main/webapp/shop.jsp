@@ -40,28 +40,28 @@
     <div class="product-list">
         <!-- Product 1 -->
         <div class="product">
-            <img src="product1.jpg" alt="Smart Sensor">
+            <img src="Images/SmartSensor.png" alt="Smart Sensor">
             <h3>Smart Sensor</h3>
             <p>High precision sensor for your IoT applications.</p>
             <button>Add to Cart</button>
         </div>
         <!-- Product 2 -->
         <div class="product">
-            <img src="product2.jpg" alt="IoT Hub">
+            <img src="Images/IoTHubM3.png" alt="IoT Hub">
             <h3>IoT Hub</h3>
             <p>Centralized device management and connectivity.</p>
             <button>Add to Cart</button>
         </div>
         <!-- Product 3 -->
         <div class="product">
-            <img src="product3.jpg" alt="Smart Light">
+            <img src="Images/LEDLight.png" alt="Smart Light">
             <h3>Smart Light</h3>
             <p>Adjustable smart lighting for energy savings.</p>
             <button>Add to Cart</button>
         </div>
         <!-- Product 4 -->
         <div class="product">
-            <img src="product4.jpg" alt="Security Camera">
+            <img src="Images/SecurityCamera.png" alt="Security Camera">
             <h3>Security Camera</h3>
             <p>High definition camera with remote monitoring.</p>
             <button>Add to Cart</button>
