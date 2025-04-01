@@ -4,7 +4,8 @@
 
 <%
     // Retrieve form data
-    String name = request.getParameter("name");
+    String firstName = request.getParameter("firstName");
+    String lastName = request.getParameter("lastName");
     String email = request.getParameter("email");
     String password = request.getParameter("password");
     String tos = request.getParameter("tos");
@@ -13,7 +14,8 @@
         response.sendRedirect("register.jsp?error=tos");
     } else {
         User user = new User();
-        user.setName(name);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(password);
 

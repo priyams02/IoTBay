@@ -5,5 +5,5 @@
     session.invalidate();
 
     // Redirect to home page. Someone change to logout page when it's ready
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("logout.jsp");
 %>

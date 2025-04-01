@@ -8,6 +8,10 @@
     <link rel="stylesheet" type="text/css" href="styles/login.css">
 </head>
 <body>
+    <!-- Top menu bar thing. -->
+    <nav class="navbar">
+            <div class="navLinks left"><a href="index.jsp">Home</a></div>
+    </nav>
 <div class="login-container">
     <p><strong>Please Login to your IoTBay Account</strong></p>
     <h2>Login</h2>
@@ -33,6 +37,9 @@
 
         <button type="submit">Login</button>
     </form>
+    <div class="signup-link">
+        Not Registered? <a href="register.jsp">Register Now!</a>
+    </div>
 </div>
 </body>
 </html>

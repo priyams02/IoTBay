@@ -1,4 +1,7 @@
 <%@ page import="main.classes.User" %>
+<%@ page import="main.classes.Address" %>
+<%@ page import="main.classes.Staff" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     // Retrieve the logged-in user from session
@@ -17,7 +20,7 @@
 <div class="IndexDivMain">
     <!-- Top Menu Bar -->
     <!-- I think when we finish up the initial design let's make the nav bar horizontal instead of vertical -->
-    <nav>
+    <nav class="navbar">
         <div class="navLinks left">
             <a href="index.jsp">Home</a>
         </div>
@@ -44,6 +47,48 @@
             to purchase IoT devices.
         </p>
     </div>
+    <%--    Show up customer/User information--%>
+    <div>
+        <div class ="CentreScreen">
+            <%
+                try {
+                    User active = (User) session.getAttribute("loggedInUser");
+                    if (active != null) {
+                        String firstName = active.getFirstName();
+                        String lastName = active.getLastName();
+
+                        if (firstName != null && lastName != null) {
+                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
+                        } else {
+                            out.println("<h1>Hello Customer!</h1>");
+                        }
+
+                        out.println("<br><p class=\"text\">");
+                        out.println("Your E-Mail Address is: " + active.getEmail());
+                        out.println("<br>");
+                        out.println("Your Password is: " + active.getPassword());
+                        out.println("</p>");
+                    }
+                } catch (ClassCastException c) {
+                    Staff active = (Staff) session.getAttribute("User");
+                    if (active != null) {
+                        String firstName = active.getFirstName();
+                        String lastName = active.getLastName();
+
+                        if (firstName != null && lastName != null) {
+                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
+                        } else {
+                            out.println("<h1>Hello!</h1>");
+                        }
+
+                        out.println("<br><p class=\"text\">");
+                        out.println("Your E-Mail Address is: " + active.getEmail());
+                        out.println("<br>");
+                        out.println("Your Password is: " + active.getPassword());
+                    }
+                }
+            %>
+        </div>
 
     <!-- Logged-in User Information -->
     <div class="login">
@@ -56,5 +101,13 @@
         </p>
     </div>
 </div>
+    </div>
 </body>
 </html>
+
+<script>
+
+    function logout() {
+        window.location.href = "LogoutHandler.jsp";
+    }
+</script>
