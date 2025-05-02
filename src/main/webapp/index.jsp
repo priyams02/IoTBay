@@ -1,11 +1,25 @@
-<%@ page import="main.classes.User" %>
-<%@ page import="main.classes.Address" %>
-<%@ page import="main.classes.Staff" %>
+<%@ page import="uts.classes.User" %>
+<%@ page import="uts.classes.Address" %>
+<%@ page import="uts.classes.Staff" %>
+<%@ page import="uts.classes.DAO.DBConnector" %>
+<%@ page import="uts.classes.DAO.DBManager" %>
+<%@ page import="java.sql.SQLException" %>
+
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     // Retrieve the logged-in user from session
     User user = (User) session.getAttribute("loggedInUser");
+    //DB Manager
+    DBManager db = (DBManager) session.getAttribute("db");
+    if (db == null) {
+        try {
+            db = new DBManager(new DBConnector().getConnection());
+            session.setAttribute("db", db);
+        } catch (SQLException e) {
+            System.out.println("Failed to connect to database");
+        }
+    }
 %>
 
 <!DOCTYPE html>
