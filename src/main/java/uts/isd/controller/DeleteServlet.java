@@ -13,6 +13,10 @@ import uts.isd.model.dao.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/*
+    The logic when a Registered Customer or Staff deletes their account from
+    IoTBay
+ */
 @WebServlet("/DeleteServlet")
 public class DeleteServlet extends HttpServlet {
     @Override

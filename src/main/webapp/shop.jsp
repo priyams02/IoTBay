@@ -1,6 +1,6 @@
-<%@ page import="uts.classes.User" %>
-<%@ page import="uts.classes.Address" %>
-<%@ page import="uts.classes.Staff" %>
+<%@ page import="uts.isd.model.Person.User" %>
+<%@ page import="uts.isd.model.Person.Address" %>
+<%@ page import="uts.isd.model.Person.Staff" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
