@@ -48,3 +48,17 @@ To address this, a web-based application was developed to enable customers to co
     - Select the configured Tomcat server.
     - Click **Run** ▶ or press **Shift + F10**.
 11. Visit `http://localhost:8080/IoTBay` (or your configured context path) in your browser.
+---
+
+## 🧪 Tested On
+
+- **Browser:** Google Chrome (v100+)
+- **Java Platform:** OpenJDK 11 / 17
+- **Application Server:** Apache Tomcat 9+
+- **Database:** SQLite (via JDBC driver)
+
+---
+
+## 📄 License & Credits
+
+Developed as part of UTS subject **Introduction to Software Development (41025)**.
