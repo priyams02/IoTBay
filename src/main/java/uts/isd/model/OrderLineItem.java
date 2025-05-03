@@ -8,7 +8,7 @@ public class OrderLineItem implements Serializable {
     private final Product product;
     private final Customer owner;
     private int quantity;
-    private float totalCost;
+    private double totalCost;  // changed to double
 
     public OrderLineItem(Product product, Customer owner, int quantity) {
         this.product = product;
@@ -19,7 +19,7 @@ public class OrderLineItem implements Serializable {
             this.totalCost = product.getPrice() * quantity;
         } else {
             System.out.println("Warning: Product is null");
-            this.totalCost = 0f;
+            this.totalCost = 0.0;
         }
     }
 
@@ -35,7 +35,7 @@ public class OrderLineItem implements Serializable {
         return quantity;
     }
 
-    public float getTotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
 
