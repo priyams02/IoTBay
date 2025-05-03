@@ -1,5 +1,7 @@
 package uts.isd.model.Person;
 
+import uts.isd.model.Order;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
