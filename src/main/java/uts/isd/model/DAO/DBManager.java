@@ -25,11 +25,7 @@ public abstract class DBManager<T> {
      * Use this for consistency when handling sensitive information and
      * differentiating between Registered and Unregistered Customers.
      */
-    public static final String AnonymousUserEmail = "ANONYMOUS@USER.UTS";
-
-
-    private final Connection connection;
-
+    public static final String AnonymousUserEmail = "ANONYMOUS@USER.UTS.EDU.AU";
     public ArrayList<Customer> customers;
     public ArrayList<Staff> staff;
     public ArrayList<Product> products;
@@ -38,43 +34,7 @@ public abstract class DBManager<T> {
 
     public DBManager(Connection connection) throws SQLException {
         this.connection = connection;
-        try (Statement pragma = connection.createStatement()) {
-            pragma.execute("PRAGMA foreign_keys = ON;");
-        }
-
-    }
-
-    /*
-    This is where you add the methods for CRUD in our DB
-    I'll add an example shortly
-     */
-
-    /**
-     * Finds a Customer with an Email.
-     *
-     * @param email The Email address to search.
-     * @return Customer with Email email.
-     * @throws SQLException
-     */
-
-    public Customer findCustomer(String email) throws SQLException {
-        email = email.toLowerCase();
-
-        if (email.equals(AnonymousUserEmail.toLowerCase())) {
-            return null;
-        }
-
-        String sql = "SELECT * FROM CUSTOMERS WHERE EMAIL = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return resultSetToCustomer(rs);
-                }
-            }
-        }
-
-        return null;
+        statement = connection.createStatement();
     }
 
     protected abstract T add(T object) throws SQLException;

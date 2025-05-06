@@ -34,7 +34,7 @@ public class DBConnector {
         try {
             if (connection != null) {
                 connection.close();
-                System.ot.println("Connection closed");
+                System.out.println("Connection closed");
             }
         }
         catch (SQLException e) {

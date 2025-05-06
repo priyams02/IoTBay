@@ -1,5 +1,4 @@
 <%@ page import="uts.isd.model.Person.User" %>
-<%@ page import="uts.classes.UserDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%

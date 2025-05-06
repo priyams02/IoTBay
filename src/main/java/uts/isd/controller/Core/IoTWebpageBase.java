@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import uts.isd.model.dao.DBConnector;
-import uts.isd.model.dao.DBManager;
+import uts.isd.model.DAO.DBConnector;
+import uts.isd.model.DAO.DBManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
