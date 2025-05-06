@@ -6,7 +6,7 @@ public class Staff extends User implements Serializable{
     private String role;
 
     public Staff(String firstName, String lastName, String password, String email) {
-//        super(firstName, lastName, password, email, UserType.STAFF);
+        super(firstName, lastName, password, email, UserType.STAFF);
     }
 
     public String getRole() {

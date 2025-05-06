@@ -1,8 +1,8 @@
 package uts.isd.controller;
 
-import uts.isd.model.User;
-import uts.isd.model.dao.DAO;
-import uts.isd.model.dao.DBManager;
+import uts.isd.model.Person.User;
+import uts.isd.model.DAO.DBManager;
+import uts.isd.model.DAO.DBConnector;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

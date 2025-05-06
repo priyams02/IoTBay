@@ -6,8 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import uts.isd.model.User;
-import uts.isd.model.dao.DAO;
+import uts.isd.model.Person.User;
+import uts.isd.model.DAO;
+
 import uts.isd.model.dao.DBManager;
 
 import java.io.IOException;
