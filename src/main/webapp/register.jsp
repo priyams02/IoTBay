@@ -26,36 +26,69 @@
     <div class="content">
     <div class="bg"></div>
     <h1>Create Account</h1>
+      <h2>Register</h2>
       <div class="register-container">
-        <h2>Register</h2>
-        <form class="register-form" action="RegisterHandler.jsp" method="post">
+        <div class="form-inner">
+          <form action="../Register" class="login" method="POST">
 
-          <label for="firstName">First Name</label>
-          <input class="box" id="firstName" name="firstName" type="text" required />
+            <div class="field">
+              <input type="text" placeholder="First Name" name="First" <%String f = request.getParameter("First");%> required>
+            </div>
 
-          <label for="lastName">Last Name</label>
-          <input class="box" id="lastName" name="lastName" type="text" required />
+            <div class="field">
+              <input type="text" placeholder="Last Name" name="Last" <%String l = request.getParameter("Last");%> required>
+            </div>
 
-          <label for="email">Email</label>
-          <input class="box" id="email" name="email" type="email" required />
+            <div class="field">
+              <input type="email" placeholder="E-Mail Address" name="Email" <%String e = request.getParameter("Email");%> required>
+            </div>
 
-          <label for="password">Password</label>
-          <input class="box" id="password" name="password" type="password" required />
+            <div class="field">
+              <input type="text" placeholder="Phone Number" name="PhoneNumber" <%String pn = request.getParameter("PhoneNumber");%> required>
+            </div>
 
-          <label for="tos">
-            Agree to our
-            <span style="color: dodgerblue; cursor: pointer">Terms of Service</span>
-          </label>
-          <input type="checkbox" id="tos" name="tos" required />
+            <div class="field">
+              <input type="password" placeholder="Password" name="Pass1" required>
+            </div>
 
-          <button type="submit">Register</button>
-        </form>
+            <div class="field">
+              <input type="password" placeholder="Confirm Password" name="Pass2" required>
+            </div>
 
-        <div class="signup-link">
-          Already registered? <a href="login.jsp">Login Here</a>.
-        </div>
-      </div>
+            <div class="field">
+              <input type="text" placeHolder="Unit/Street No." name="addNum" <%String n = request.getParameter("addNum");%> required>
+            </div>
 
+            <div class="field">
+              <input type="text" placeHolder="Street" name="addStreetName" <%String sn = request.getParameter("addStreetName");%> required>
+            </div>
+
+            <div class="field">
+              <input type="text" placeHolder="Suburb" name="addSuburb" <%String s = request.getParameter("addSuburb");%> required>
+            </div>
+
+            <div class="field">
+              <input type="text" placeHolder="Postcode" name="addPostcode" <%String p = request.getParameter("addPostcode");%> required>
+            </div>
+
+            <div class="field">
+              <input type="text" placeHolder="City" name="addCity" <%String c = request.getParameter("addCity");%> >
+            </div>
+            <label for="tos">
+              Agree to our
+              <span style="color: dodgerblue; cursor: pointer">Terms of Service</span>
+            </label>
+            <input type="checkbox" id="tos" name="tos" required />
+
+            <div class="field">
+              <input type="submit" value="Register">
+            </div>
+
+            <div class="signup-link">
+              Already Registered? <a href="Login.jsp">Login Here</a>.
+            </div>
+
+          </form>
       <div class="footer"></div>
 </body>
 </html>

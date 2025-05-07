@@ -1,4 +1,4 @@
-package uts.isd.controller;
+package uts.isd.Controller;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -6,8 +6,6 @@ import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
-import uts.isd.model.DAO.DBConnector;
-import uts.isd.model.DAO.DBManager;
 
 import java.sql.SQLException;
 

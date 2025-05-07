@@ -1,22 +1,31 @@
-package uts.isd.model.dao;
+package uts.isd.model.DAO;
 
-import uts.isd.model.User;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-import java.sql.*;
 
-public abstract class DBManager<T> {
-    protected final Statement statement;
-    protected final Connection connection;
+public class DAO {
+    ArrayList<AbstractDBManager<?>> tables;
+    Connection connection;
 
-    public DBManager(Connection connection) throws SQLException {
-        this.connection = connection;
-        statement = connection.createStatement();
+    public DAO() throws SQLException {
+        tables = new ArrayList<>();
+        connection = new DBConnector().getConnection();
+        try {
+            tables.add(new UserDBManager(connection));
+        }
+        catch (SQLException ex) {
+            System.out.println("Error initializing DBManagers");
+        }
     }
 
-    protected abstract T add(T object) throws SQLException;
-    protected abstract T get(T object) throws SQLException;
-    protected abstract void update(T oldObject, T newObject) throws SQLException;
-    protected abstract void delete(T object) throws SQLException;
+    public Connection getConnection() {
+        return connection;
+    }
 
+    public UserDBManager Users() {
+        return (UserDBManager) tables.get(0);
+    }
 
 }
