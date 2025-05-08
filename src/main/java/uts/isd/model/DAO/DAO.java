@@ -2,42 +2,49 @@ package uts.isd.model.DAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 
 public class DAO {
-    Connection connection;
+    private final Connection connection;
 
-    private final CustomerDBManager customerDB;
-    private final StaffDBManager   staffDB;
-    private final ProductDBManager ProductDB;
-
-    // Later you can add more, like:
-    // private final ProductDBManager productDBManager;
+    public final CustomerDBManager customerDB;
+    public final StaffDBManager   staffDB;
+    public final ProductDBManager  productDB;
+    public final CartDBManager     cartDB;
+    public final OrderDBManager    orderDB;
 
     public DAO() throws SQLException {
         this.connection = new DBConnector().getConnection();
         this.customerDB = new CustomerDBManager(connection);
-        this.staffDB = new StaffDBManager(connection);
-        this.ProductDB = new ProductDBManager(connection);
+        this.staffDB    = new StaffDBManager(connection);
+        this.productDB  = new ProductDBManager(connection);
+        this.cartDB     = new CartDBManager(connection);
+        this.orderDB    = new OrderDBManager(connection);
     }
 
     public Connection getConnection() {
         return connection;
     }
 
-    public ProductDBManager products(){
-        return ProductDB;
-    }
-
     public CustomerDBManager customers() {
         return customerDB;
     }
-    public StaffDBManager   staff()     {
+
+    public StaffDBManager staff() {
         return staffDB;
     }
 
-    // Optionally:
+    public ProductDBManager products() {
+        return productDB;
+    }
+
+    public CartDBManager cart() {
+        return cartDB;
+    }
+
+    public OrderDBManager orders() {
+        return orderDB;
+    }
+
     public void close() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();

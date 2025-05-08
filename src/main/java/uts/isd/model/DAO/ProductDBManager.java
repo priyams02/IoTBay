@@ -67,11 +67,18 @@ public class ProductDBManager extends AbstractDBManager<Product> {
     }
 
     /**
-     * Retrieve the productId directly from a Product object.
+     * Returns the numeric product ID parsed from the model's string field.
      */
-    public String findProductID(Product p) {
-        return p.getProductId();
+    public int findProductID(Product p) {
+        try {
+            return Integer.parseInt(p.getProductId());
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(
+                    "Product.productId is not a valid integer: " + p.getProductId(), ex
+            );
+        }
     }
+
 
     /**
      * Search products by name (case-insensitive substring match).
@@ -136,6 +143,7 @@ public class ProductDBManager extends AbstractDBManager<Product> {
         int stock       = rs.getInt("STOCK");
         return new Product(id, name, category, price, stock);
     }
+
 
     private String clamp(String s, int max) {
         if (s == null) return null;
