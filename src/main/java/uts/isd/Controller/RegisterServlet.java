@@ -1,7 +1,12 @@
 package uts.isd.Controller;
 
-import uts.isd.Controller.Core.*;
-import uts.isd.model.Person.*;
+import uts.isd.Controller.Core.IoTWebpageBase;
+import uts.isd.model.Person.Address;
+import uts.isd.model.Person.Customer;
+import uts.isd.model.Person.PaymentInformation;
+import uts.isd.model.Person.User;
+import uts.isd.model.DAO.DAO;
+import uts.isd.model.DAO.CustomerDBManager;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +23,7 @@ public class RegisterServlet extends IoTWebpageBase {
             throws ServletException, IOException {
         super.doPost(request, response);
 
-        // Pull parameters
+        // Pull form parameters
         String firstName = request.getParameter("First"),
                 lastName  = request.getParameter("Last"),
                 email     = request.getParameter("Email"),
@@ -31,14 +36,22 @@ public class RegisterServlet extends IoTWebpageBase {
                 postcode  = request.getParameter("addPostcode"),
                 city      = request.getParameter("addCity");
 
-        // Validate all at once
+        // Initialize DAO & CustomerDBManager
+        DAO dao;
+        try {
+            dao = new DAO();
+        } catch (SQLException e) {
+            throw new ServletException("Database connection error", e);
+        }
+        CustomerDBManager customerDB = dao.customers();
+
+        // Validate
         String error = validateRegistration(
+                customerDB,
                 firstName, lastName, email, phone,
                 pass1, pass2, num, street, suburb, postcode, city
         );
-
         if (error != null) {
-            // Redirect back with error
             String params = redirectParams(
                     "err", error,
                     "First", firstName,
@@ -55,7 +68,7 @@ public class RegisterServlet extends IoTWebpageBase {
             return;
         }
 
-        // Create and persist customer
+        // Build new Customer object
         Customer newCustomer = new Customer(
                 firstName,
                 lastName,
@@ -66,13 +79,14 @@ public class RegisterServlet extends IoTWebpageBase {
                 User.UserType.CUSTOMER
         );
 
+        // Persist via CustomerDBManager
         try {
-            uDB.add(newCustomer);
+            customerDB.add(newCustomer);
         } catch (SQLException e) {
             throw new ServletException("Error registering user", e);
         }
 
-        // On success, store in session and forward
+        // On success: store in session and redirect
         HttpSession session = request.getSession();
         session.setAttribute("User", newCustomer);
         String redirect = redirectParams(
@@ -86,12 +100,13 @@ public class RegisterServlet extends IoTWebpageBase {
      * Returns an error message if any field is invalid, or null if all good.
      */
     private String validateRegistration(
+            CustomerDBManager customerDB,
             String firstName, String lastName, String email, String phone,
             String pass1, String pass2, String num,
             String street, String suburb, String postcode, String city) {
 
         try {
-            if (uDB.findCustomer(email) != null) {
+            if (customerDB.findCustomer(email) != null) {
                 return "An account with that E-Mail already exists!";
             }
         } catch (SQLException ignored) {}

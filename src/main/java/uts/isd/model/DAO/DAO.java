@@ -6,26 +6,29 @@ import java.util.ArrayList;
 
 
 public class DAO {
-    ArrayList<AbstractDBManager<?>> tables;
     Connection connection;
 
+    private final CustomerDBManager customerDBManager;
+    // Later you can add more, like:
+    // private final ProductDBManager productDBManager;
+
     public DAO() throws SQLException {
-        tables = new ArrayList<>();
-        connection = new DBConnector().getConnection();
-        try {
-            tables.add(new UserDBManager(connection));
-        }
-        catch (SQLException ex) {
-            System.out.println("Error initializing DBManagers");
-        }
+        this.connection = new DBConnector().getConnection();
+        this.customerDBManager = new CustomerDBManager(connection);
     }
 
     public Connection getConnection() {
         return connection;
     }
 
-    public UserDBManager Users() {
-        return (UserDBManager) tables.get(0);
+    public CustomerDBManager customers() {
+        return customerDBManager;
     }
 
+    // Optionally:
+    public void close() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+    }
 }

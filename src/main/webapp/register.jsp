@@ -29,7 +29,7 @@
       <h2>Register</h2>
       <div class="register-container">
         <div class="form-inner">
-          <form action="../Register" class="login" method="POST">
+          <form action="../RegisterServlet" class="login" method="POST">
 
             <div class="field">
               <input type="text" placeholder="First Name" name="First" <%String f = request.getParameter("First");%> required>

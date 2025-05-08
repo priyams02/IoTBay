@@ -70,6 +70,9 @@ public class Customer extends User implements Serializable {
         this.purchaseHistory.add(order);
     }
 
+    public PaymentInformation getPayment() {
+        return getPaymentInfo();
+    }
     // Convenience method for setting payment info
     public void setPayment(String cardNo, String cvv, String cardHolder) {
         setPaymentInfo(new PaymentInformation(cardNo, cvv, cardHolder, null));
