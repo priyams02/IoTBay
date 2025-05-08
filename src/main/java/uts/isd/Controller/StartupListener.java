@@ -1,32 +1,33 @@
 package uts.isd.Controller;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionListener;
-
-import java.sql.SQLException;
+import uts.isd.model.DAO.DAO;
 
 @WebListener
-public class StartupListener implements ServletContextListener, HttpSessionListener {
-    public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Server Started");
-    }
+public class StartupListener implements ServletContextListener {
+    private DAO dao;
 
     @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        HttpSession session = se.getSession();
+    public void contextInitialized(ServletContextEvent sce) {
+        System.out.println("Server Started");
         try {
-            DAO dao = new DAO();
-            session.setAttribute("db", dao);
-        } catch (SQLException e) {
-            System.out.println("Could not connect to database");
+            dao = new DAO();
+            ServletContext ctx = sce.getServletContext();
+            ctx.setAttribute("dao", dao);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize DAO", e);
         }
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println("Server Stopped");
+        if (dao != null) {
+            try { dao.close(); }
+            catch (Exception ignored) {}
+        }
     }
 }
