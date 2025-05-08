@@ -8,13 +8,16 @@ import java.util.ArrayList;
 public class DAO {
     Connection connection;
 
-    private final CustomerDBManager customerDBManager;
+    private final CustomerDBManager customerDB;
+    private final StaffDBManager   staffDB;
+
     // Later you can add more, like:
     // private final ProductDBManager productDBManager;
 
     public DAO() throws SQLException {
         this.connection = new DBConnector().getConnection();
-        this.customerDBManager = new CustomerDBManager(connection);
+        this.customerDB = new CustomerDBManager(connection);
+        this.staffDB = new StaffDBManager(connection);
     }
 
     public Connection getConnection() {
@@ -22,7 +25,10 @@ public class DAO {
     }
 
     public CustomerDBManager customers() {
-        return customerDBManager;
+        return customerDB;
+    }
+    public StaffDBManager   staff()     {
+        return staffDB;
     }
 
     // Optionally:
