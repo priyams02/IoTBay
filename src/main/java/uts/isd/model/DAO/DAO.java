@@ -10,6 +10,7 @@ public class DAO {
 
     private final CustomerDBManager customerDB;
     private final StaffDBManager   staffDB;
+    private final ProductDBManager ProductDB;
 
     // Later you can add more, like:
     // private final ProductDBManager productDBManager;
@@ -18,10 +19,15 @@ public class DAO {
         this.connection = new DBConnector().getConnection();
         this.customerDB = new CustomerDBManager(connection);
         this.staffDB = new StaffDBManager(connection);
+        this.ProductDB = new ProductDBManager(connection);
     }
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public ProductDBManager products(){
+        return ProductDB;
     }
 
     public CustomerDBManager customers() {
