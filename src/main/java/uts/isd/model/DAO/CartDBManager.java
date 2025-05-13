@@ -145,7 +145,7 @@ public class CartDBManager extends AbstractDBManager<OrderLineItem> {
         int qty = r.getInt("QUANTITY");
         String ownerEmail = r.getString("OWNER");
         Customer owner = new CustomerDBManager(connection).findCustomer(ownerEmail);
-        Product product = new ProductDBManager(connection).findProduct(pid);
+        Product product = new ProductDBManager(connection).findProduct(String.valueOf(pid));
         return new OrderLineItem(product, owner, qty);
     }
 }
