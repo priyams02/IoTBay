@@ -1,4 +1,4 @@
-package uts.isd.controller.Search;
+package uts.isd.Controller.Search;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
