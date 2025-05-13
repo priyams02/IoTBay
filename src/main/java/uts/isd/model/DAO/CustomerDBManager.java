@@ -5,6 +5,8 @@ import uts.isd.model.Person.Customer;
 import uts.isd.model.Person.PaymentInformation;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDBManager extends AbstractDBManager<Customer> {
 
@@ -135,9 +137,25 @@ public class CustomerDBManager extends AbstractDBManager<Customer> {
         c.setPaymentInfo(p);
         return c;
     }
+    public List<Customer> searchCustomers(String byName) throws SQLException {
+        String sql = "SELECT * FROM CUSTOMERS WHERE UPPER(FIRSTNAME) LIKE UPPER(?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + byName + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Customer> list = new ArrayList<>();
+                while (rs.next()) {
+                    list.add(resultSetToCustomer(rs));
+                }
+                return list;
+            }
+        }
+    }
+
 
     private String clamp(String str, int maxLength) {
         if (str == null) return "";
         return (str.length() <= maxLength) ? str : str.substring(0, maxLength);
     }
+
+
 }

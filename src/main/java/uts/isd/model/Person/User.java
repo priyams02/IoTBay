@@ -14,6 +14,7 @@ public class User implements Serializable {
     private Address address;
     private PaymentInformation paymentInfo;
 
+
     // Full constructor with all fields
     public User(String firstName, String lastName, String password, String email, Address address, PaymentInformation paymentInfo, UserType type) {
         this.ID = totalUsers++;
