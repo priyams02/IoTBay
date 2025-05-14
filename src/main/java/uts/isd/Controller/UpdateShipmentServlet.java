@@ -13,16 +13,16 @@ import java.io.IOException;
 
 @WebServlet("/Shipment/Update")
 public class UpdateShipmentServlet extends IoTWebpageBase {
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    @Override public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
             int id = Integer.parseInt(req.getParameter("id"));
             DAO dao = new DAO();
             ShipmentDBManager mgr = dao.shipments();
-            Shipment s = mgr.findById(id);
+            uts.isd.model.Shipment s = mgr.findById(id);
             req.setAttribute("shipment", s);
-            req.getRequestDispatcher("/shipmentForm.jsp").forward(req, resp);
+            req.getRequestDispatcher("/shipmentForm.jsp")
+                    .forward(req, resp);
         } catch (Exception e) {
             throw new ServletException("Failed to load shipment", e);
         }

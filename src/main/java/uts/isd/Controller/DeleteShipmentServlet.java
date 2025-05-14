@@ -6,9 +6,9 @@ import jakarta.servlet.http.*;
 import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.ShipmentDBManager;
-import uts.isd.model.Shipment;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/Shipment/Delete")
 public class DeleteShipmentServlet extends IoTWebpageBase {
@@ -22,16 +22,10 @@ public class DeleteShipmentServlet extends IoTWebpageBase {
 
             DAO dao = new DAO();
             ShipmentDBManager mgr = dao.shipments();
-            mgr.delete(new Shipment(orderId, null, null, null) {{
-                try {
-                    java.lang.reflect.Field f = Shipment.class.getDeclaredField("shipmentId");
-                    f.setAccessible(true);
-                    f.setInt(this, id);
-                } catch (Exception ignored) {}
-            }});
+            mgr.deleteById(id);
 
             resp.sendRedirect(ctx + "/Shipment/List?orderId=" + orderId);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new ServletException("Failed to delete shipment", e);
         }
     }

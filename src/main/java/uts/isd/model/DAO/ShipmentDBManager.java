@@ -12,14 +12,12 @@ public class ShipmentDBManager extends AbstractDBManager<Shipment> {
         super(connection);
     }
 
-    /** Create a new shipment record */
     @Override
     public Shipment add(Shipment s) throws SQLException {
-        String sql = "INSERT INTO SHIPMENTS " +
-                "(ORDERID, STREETNUMBER, STREETNAME, SUBURB, POSTCODE, CITY, STATUS, SHIPPINGOPTIONS) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(
-                sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO SHIPMENTS "
+                + "(ORDERID, STREETNUMBER, STREETNAME, SUBURB, POSTCODE, CITY, STATUS, SHIPPINGOPTIONS) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             Address a = s.getDestination();
             ps.setInt(1, s.getOrderId());
             ps.setString(2, a.getNumber());
@@ -30,18 +28,13 @@ public class ShipmentDBManager extends AbstractDBManager<Shipment> {
             ps.setString(7, s.getStatus());
             ps.setString(8, s.getShippingOptions());
             ps.executeUpdate();
-
             try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    int newId = rs.getInt(1);
-                    return findById(newId);
-                }
+                if (rs.next()) return findById(rs.getInt(1));
             }
         }
         return null;
     }
 
-    /** Read by shipment ID */
     @Override
     public Shipment get(Shipment s) throws SQLException {
         return findById(s.getShipmentId());
@@ -58,27 +51,22 @@ public class ShipmentDBManager extends AbstractDBManager<Shipment> {
         return null;
     }
 
-    /** List all shipments for a given order */
     public List<Shipment> listByOrder(int orderId) throws SQLException {
         String sql = "SELECT * FROM SHIPMENTS WHERE ORDERID = ?";
         List<Shipment> list = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             try (ResultSet r = ps.executeQuery()) {
-                while (r.next()) {
-                    list.add(mapRow(r));
-                }
+                while (r.next()) list.add(mapRow(r));
             }
         }
         return list;
     }
 
-    /** Update a shipment’s details */
     @Override
     public void update(Shipment oldS, Shipment newS) throws SQLException {
-        String sql = "UPDATE SHIPMENTS SET " +
-                "STREETNUMBER=?, STREETNAME=?, SUBURB=?, POSTCODE=?, CITY=?, STATUS=?, SHIPPINGOPTIONS=? " +
-                "WHERE ID = ?";
+        String sql = "UPDATE SHIPMENTS SET STREETNUMBER=?, STREETNAME=?, SUBURB=?, POSTCODE=?, "
+                + "CITY=?, STATUS=?, SHIPPINGOPTIONS=? WHERE ID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             Address a = newS.getDestination();
             ps.setString(1, a.getNumber());
@@ -93,12 +81,17 @@ public class ShipmentDBManager extends AbstractDBManager<Shipment> {
         }
     }
 
-    /** Delete a shipment record */
+    /** Delete by Shipment object */
     @Override
     public void delete(Shipment s) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM SHIPMENTS WHERE ID = ?")) {
-            ps.setInt(1, s.getShipmentId());
+        deleteById(s.getShipmentId());
+    }
+
+    /** Delete directly by ID */
+    public void deleteById(int id) throws SQLException {
+        String sql = "DELETE FROM SHIPMENTS WHERE ID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
             ps.executeUpdate();
         }
     }
@@ -112,9 +105,10 @@ public class ShipmentDBManager extends AbstractDBManager<Shipment> {
                 r.getString("SUBURB"),
                 r.getString("POSTCODE"),
                 r.getString("CITY")
-        );
+            );
         String st   = r.getString("STATUS");
         String opts = r.getString("SHIPPINGOPTIONS");
-        return new Shipment(oid, a, st, opts);
-    }
+        // Use the constructor that takes the real shipmentId:
+         return new Shipment(id, oid, a, st, opts);
+        }
 }
