@@ -2,9 +2,7 @@ package uts.isd.Controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.CartDBManager;
@@ -19,17 +17,15 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Processes checkout: converts the session cart into an order (registered or anonymous).
- */
 @WebServlet(name = "Checkout", urlPatterns = "/Checkout")
 public class CheckoutServlet extends IoTWebpageBase {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Show the checkout form
-        request.getRequestDispatcher("IoTCore/Checkout.jsp").forward(request, response);
+        // show checkout form
+        request.getRequestDispatcher("/checkout.jsp")
+                .forward(request, response);
     }
 
     @Override
@@ -40,63 +36,62 @@ public class CheckoutServlet extends IoTWebpageBase {
         if (dao == null) {
             throw new ServletException("DAO not initialized in session");
         }
-        // Managers for cart and orders
+
         CartDBManager cartDB   = dao.cart();
         OrderDBManager orderDB = dao.orders();
 
-        // 1. Retrieve & trim inputs
-        String email            = trim(request.getParameter("email"));
-        String isCustomer       = trim(request.getParameter("isCustomer"));
-        String addressNum       = trim(request.getParameter("addNum"));
-        String addressStreet    = trim(request.getParameter("addStreetName"));
-        String addressSuburb    = trim(request.getParameter("addSuburb"));
-        String addressPostcode  = trim(request.getParameter("addPostcode"));
-        String addressCity      = trim(request.getParameter("addCity"));
-        String cardNo           = trim(request.getParameter("CardNo"));
-        String cvv              = trim(request.getParameter("CVV"));
-        String cardHolder       = trim(request.getParameter("CardHolder"));
+        // 1) pull & trim
+        String email           = trim(request.getParameter("email"));
+        String addressNum      = trim(request.getParameter("addNum"));
+        String addressStreet   = trim(request.getParameter("addStreetName"));
+        String addressSuburb   = trim(request.getParameter("addSuburb"));
+        String addressPostcode = trim(request.getParameter("addPostcode"));
+        String addressCity     = trim(request.getParameter("addCity"));
+        String cardNo          = trim(request.getParameter("CardNo"));
+        String cvv             = trim(request.getParameter("CVV"));
+        String cardHolder      = trim(request.getParameter("CardHolder"));
 
-        // 2. Basic validation
-        if (isCustomer.isEmpty() || email.isEmpty()
-                || addressNum.isEmpty() || addressStreet.isEmpty()
-                || addressSuburb.isEmpty() || addressPostcode.isEmpty()
-                || addressCity.isEmpty()
-                || cardNo.isEmpty() || cvv.isEmpty() || cardHolder.isEmpty()) {
-            redirectWithParam(response, "err", "All fields are required");
+        // 2) basic validation
+        if (email.isEmpty() ||
+                addressNum.isEmpty() || addressStreet.isEmpty() ||
+                addressSuburb.isEmpty() || addressPostcode.isEmpty() ||
+                addressCity.isEmpty() ||
+                cardNo.isEmpty() || cvv.isEmpty() || cardHolder.isEmpty()) {
+            // redirect back with error
+            String err = URLEncoder.encode("All fields are required", StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/checkout.jsp?err=" + err);
             return;
         }
 
-        // 3. Build address and payment info
+        // 3) build Address + PaymentInformation
         Address shipping = new Address(
-                addressNum,
-                addressStreet,
-                addressSuburb,
-                addressPostcode,
-                addressCity
+                addressNum, addressStreet, addressSuburb, addressPostcode, addressCity
         );
         PaymentInformation pi = new PaymentInformation(cardNo, cvv, cardHolder, null);
 
-        // 4. Retrieve cart from session
+        // 4) load cart from session
         @SuppressWarnings("unchecked")
         List<OrderLineItem> cart = (List<OrderLineItem>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
-            redirectWithParam(response, "err", "There is nothing in your Cart!");
+            String err = URLEncoder.encode("Your cart is empty", StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/checkout.jsp?err=" + err);
             return;
         }
 
         try {
-            // 5) CREATE the order and capture the returned Order object
+            // 5) create order
             uts.isd.model.Order newOrder = orderDB.makeOrder(email, cart, shipping, pi);
 
-            // 6) SAVE the orderId into session so your nav can link to shipments
+            // 6) save lastOrderId in session for the nav
             session.setAttribute("lastOrderId", newOrder.getId());
 
-            // 7) clear the cart
+            // 7) clear cart both DB & session
             cartDB.clear(email);
             session.removeAttribute("cart");
 
-            // 8) redirect as before
-            redirectWithParam(response, "msg", "Order placed successfully");
+            // 8) redirect to orders.jsp (or wherever you list orders)
+            String msg = URLEncoder.encode("Order placed successfully", StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/orders.jsp?msg=" + msg);
         } catch (SQLException e) {
             throw new ServletException("Failed to place order", e);
         }
