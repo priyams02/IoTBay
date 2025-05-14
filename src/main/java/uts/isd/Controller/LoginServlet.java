@@ -1,4 +1,4 @@
-package uts.isd.controller;
+package uts.isd.Controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,81 +15,79 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
-@WebServlet(name = "Login", urlPatterns = "/Login")
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends IoTWebpageBase {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Show login page
-        request.getRequestDispatcher("IoTCore/Login.jsp")
+        request.getRequestDispatcher("/login.jsp")
                 .forward(request, response);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String ctx = request.getContextPath();
         String email    = trim(request.getParameter("Email")).toLowerCase();
         String password = trim(request.getParameter("Password"));
 
+        // Check required fields
         if (email.isEmpty() || password.isEmpty()) {
-            redirectWithParams(response,
-                    "IoTCore/Login.jsp?",
-                    new String[][] {
-                            { "err",   "Email and Password required" },
-                            { "Email", email }
-                    }
-            );
+            response.sendRedirect(ctx + "/login.jsp?err=" +
+                    URLEncoder.encode("Email and Password required", StandardCharsets.UTF_8) +
+                    "&Email=" + URLEncoder.encode(email, StandardCharsets.UTF_8));
             return;
         }
 
-        HttpSession session = request.getSession();
-        DAO dao = (DAO) session.getAttribute("dao");
-        if (dao == null) {
-            throw new ServletException("DAO not initialized in session");
+        // Create a new DAO (instead of expecting it in session)
+        DAO dao;
+        try {
+            dao = new DAO();
+        } catch (SQLException e) {
+            throw new ServletException("Database connection error", e);
         }
 
         CustomerDBManager customerDB = dao.customers();
         StaffDBManager    staffDB    = dao.staff();
 
         try {
-            // 1) Try customer login
+            // 1) Customer login
             Customer customer = customerDB.findCustomer(email);
             if (customer != null && customer.getPassword().equals(password)) {
-                session.setAttribute("loggedInUser", customer);
-                redirectToRedirector(response,
-                        "Welcome, " + customer.getFirstName() + "!",
-                        "Please wait while we redirect you..."
-                );
+                request.getSession().setAttribute("loggedInUser", customer);
+                String heading = "Welcome, " + customer.getFirstName() + "!";
+                String message = "Please wait while we redirect you...";
+                response.sendRedirect(ctx + "/Redirector.jsp?HeadingMessage=" +
+                        URLEncoder.encode(heading, StandardCharsets.UTF_8) +
+                        "&Message=" +
+                        URLEncoder.encode(message, StandardCharsets.UTF_8));
                 return;
             }
 
-            // 2) Try staff login
+            // 2) Staff login
             Staff staff = staffDB.findStaff(email, password);
             if (staff != null) {
-                session.setAttribute("loggedInUser", staff);
-                redirectToRedirector(response,
-                        "Welcome, " + staff.getFirstName() + "!",
-                        "Redirecting to admin panel..."
-                );
+                request.getSession().setAttribute("loggedInUser", staff);
+                String heading = "Welcome, " + staff.getFirstName() + "!";
+                String message = "Redirecting to admin panel...";
+                response.sendRedirect(ctx + "/Redirector.jsp?HeadingMessage=" +
+                        URLEncoder.encode(heading, StandardCharsets.UTF_8) +
+                        "&Message=" +
+                        URLEncoder.encode(message, StandardCharsets.UTF_8));
                 return;
             }
 
-            // 3) Hard-coded fallback admin
+            // 3) Hard-coded admin fallback
             if ("admin@iotbay.com".equals(email) && "admin".equals(password)) {
-                response.sendRedirect("IoTCore/Administrator/Admin.jsp");
+                response.sendRedirect(ctx + "/IoTCore/Administrator/Admin.jsp");
                 return;
             }
 
             // 4) Failed authentication
-            redirectWithParams(response,
-                    "IoTCore/Login.jsp?",
-                    new String[][] {
-                            { "err",   "Incorrect E-Mail or Password!" },
-                            { "Email", email }
-                    }
-            );
-
+            response.sendRedirect(ctx + "/login.jsp?err=" +
+                    URLEncoder.encode("Incorrect E-Mail or Password!", StandardCharsets.UTF_8) +
+                    "&Email=" + URLEncoder.encode(email, StandardCharsets.UTF_8));
         } catch (SQLException e) {
             throw new ServletException("Login failed", e);
         }
@@ -97,25 +95,5 @@ public class LoginServlet extends IoTWebpageBase {
 
     private String trim(String s) {
         return (s == null ? "" : s.trim());
-    }
-
-    private void redirectToRedirector(HttpServletResponse resp,
-                                      String heading, String message) throws IOException {
-        String url = "IoTCore/Redirector.jsp?HeadingMessage="
-                + URLEncoder.encode(heading, StandardCharsets.UTF_8)
-                + "&Message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
-        resp.sendRedirect(url);
-    }
-
-    private void redirectWithParams(HttpServletResponse resp,
-                                    String baseUrl, String[][] params) throws IOException {
-        StringBuilder sb = new StringBuilder(baseUrl);
-        for (int i = 0; i < params.length; i++) {
-            String key = params[i][0], val = params[i][1];
-            if (i > 0) sb.append("&");
-            sb.append(key).append("=")
-                    .append(URLEncoder.encode(val, StandardCharsets.UTF_8));
-        }
-        resp.sendRedirect(sb.toString());
     }
 }
