@@ -1,4 +1,4 @@
-package main.classes;
+package uts.isd.model.Person;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,10 +10,10 @@ public class PaymentInformation implements Serializable {
     private String cardNo;
     private String cvv;
     private String cardHolder;
-    private Date expiryDate;
+    private String expiryDate;
 
     // constructor with parameters
-    public PaymentInformation(String cardNo, String cvv, String cardHolder, Date expiryDate) {
+    public PaymentInformation(String cardNo, String cvv, String cardHolder, String expiryDate) {
         this.cardNo = cardNo;
         this.cvv = cvv;
         this.cardHolder = cardHolder;
@@ -38,7 +38,7 @@ public class PaymentInformation implements Serializable {
         return cardHolder;
     }
 
-    public Date getExpiryDate() {
+    public String getExpiryDate() {
         return expiryDate;
     }
 
@@ -55,7 +55,7 @@ public class PaymentInformation implements Serializable {
         this.cardHolder = cardHolder;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

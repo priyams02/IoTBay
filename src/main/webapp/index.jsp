@@ -1,96 +1,90 @@
-<%@ page import="main.classes.User" %>
-<%@ page import="main.classes.Address" %>
-<%@ page import="main.classes.Staff" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="uts.isd.model.Person.User" %>
+<%@ page import="uts.isd.model.Person.Staff" %>
+<%@ page import="uts.isd.model.DAO.DBConnector" %>
+<%@ page import="uts.isd.model.DAO.CustomerDBManager" %>
+<%@ page import="java.sql.SQLException" %>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    // Retrieve the logged-in user from session
+    // Grab the logged-in user
     User user = (User) session.getAttribute("loggedInUser");
+
+    // Lazy-init a CustomerDBManager if needed
+    CustomerDBManager db = (CustomerDBManager) session.getAttribute("db");
+    if (db == null) {
+        try {
+            db = new CustomerDBManager(new DBConnector().getConnection());
+            session.setAttribute("db", db);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Context path for absolute links
+    String ctx = request.getContextPath();
 %>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>IoTBay</title>
-    <link rel="stylesheet" href="styles/IoTBayStyles.css">
+    <!-- exactly like your old JSP, but absolute -->
+    <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
 </head>
 <body>
 <div class="IndexDivMain">
     <!-- Top Menu Bar -->
-    <!-- I think when we finish up the initial design let's make the nav bar horizontal instead of vertical -->
     <nav class="navbar">
         <div class="navLinks left">
-            <a href="index.jsp">Home</a>
+            <a href="<%= ctx %>/index.jsp">Home</a>
         </div>
         <div class="navLinks right">
-            <a href="shop.jsp">Shop</a>
+            <a href="<%= ctx %>/shop.jsp">Shop</a>
             <% if (user == null) { %>
-            <a href="login.jsp">Login</a>
-            <a href="register.jsp">Register</a>
+            <a href="<%= ctx %>/LoginServlet">Login</a>
+            <a href="<%= ctx %>/RegisterServlet">Register</a>
             <% } else { %>
-            <a href="LogoutHandler.jsp">Logout</a>
+            <a href="<%= ctx %>/LogoutServlet">Logout</a>
             <% } %>
         </div>
     </nav>
 
     <h1 class="IndexH1">IoTBay</h1>
 
-    <!-- Content Area -->
     <div>
         <p class="paragraph textarea">
-            IoTBay | Introduction to Software Development Assignment 1: R0
-            <br><br>
-            The internet of Things Store (IoTBay) is a small company based in Sydney, Australia.
+            IoTBay | Introduction to Software Development Assignment 1: R0<br><br>
+            The Internet of Things Store (IoTBay) is a small company based in Sydney, Australia.
             IoTBay wants to develop an online IoT devices ordering application to allow their customers
             to purchase IoT devices.
         </p>
     </div>
-    <%--    Show up customer/User information--%>
-    <div>
-        <div class ="CentreScreen">
-            <%
-                try {
-                    User active = (User) session.getAttribute("loggedInUser");
-                    if (active != null) {
-                        String firstName = active.getFirstName();
-                        String lastName = active.getLastName();
 
-                        if (firstName != null && lastName != null) {
-                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
-                        } else {
-                            out.println("<h1>Hello Customer!</h1>");
-                        }
+    <!-- Greet the user or staff -->
+    <div class="CentreScreen">
+        <% if (user != null) {
+            String name = (user.getFirstName() != null && user.getLastName() != null)
+                    ? user.getFirstName() + " " + user.getLastName()
+                    : "Customer";
+        %>
+        <h1>Hello, <%= name %>!</h1>
+        <p>Your E-Mail: <%= user.getEmail() %><br>Password: <%= user.getPassword() %></p>
+        <% } else {
+            Staff staff = (Staff) session.getAttribute("User");
+            if (staff != null) {
+                String name = (staff.getFirstName() != null && staff.getLastName() != null)
+                        ? staff.getFirstName() + " " + staff.getLastName()
+                        : "";
+        %>
+        <h1>Hello<%= name.isEmpty() ? "!" : ", " + name + "!" %></h1>
+        <p>Your E-Mail: <%= staff.getEmail() %><br>Password: <%= staff.getPassword() %></p>
+        <%   }
+        } %>
+    </div>
 
-                        out.println("<br><p class=\"text\">");
-                        out.println("Your E-Mail Address is: " + active.getEmail());
-                        out.println("<br>");
-                        out.println("Your Password is: " + active.getPassword());
-                        out.println("</p>");
-                    }
-                } catch (ClassCastException c) {
-                    Staff active = (Staff) session.getAttribute("User");
-                    if (active != null) {
-                        String firstName = active.getFirstName();
-                        String lastName = active.getLastName();
-
-                        if (firstName != null && lastName != null) {
-                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
-                        } else {
-                            out.println("<h1>Hello!</h1>");
-                        }
-
-                        out.println("<br><p class=\"text\">");
-                        out.println("Your E-Mail Address is: " + active.getEmail());
-                        out.println("<br>");
-                        out.println("Your Password is: " + active.getPassword());
-                    }
-                }
-            %>
-        </div>
-
-    <!-- Logged-in User Information -->
+    <!-- Footer showing who’s logged in -->
     <div class="login">
         <p>Logged in user:
             <% if (user == null) { %>
@@ -101,13 +95,11 @@
         </p>
     </div>
 </div>
-    </div>
-</body>
-</html>
 
 <script>
-
     function logout() {
-        window.location.href = "LogoutHandler.jsp";
+        window.location.href = '<%= ctx %>/LogoutServlet';
     }
 </script>
+</body>
+</html>

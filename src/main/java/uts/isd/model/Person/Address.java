@@ -1,4 +1,5 @@
-package main.classes;
+package uts.isd.model.Person;
+
 public class Address {
 
     private String number;

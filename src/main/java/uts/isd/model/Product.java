@@ -1,9 +1,8 @@
-package main.classes;
+package uts.isd.model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
-/* might need to combine products + cart + inventory or something as there is
-a lot of overlap imo after looking at the data dictionary (will discuss on thursday) */
 public class Product implements Serializable {
     private String productId;
     private String name;
@@ -20,6 +19,14 @@ public class Product implements Serializable {
         this.category = category;
         this.price = price;
         this.stock = stock;
+    }
+
+    /**
+     * Convenience constructor for when you only have name/desc, price & qty.
+     * Generates a random UUID for the productId.
+     */
+    public Product(String name, String category, double price, int stock) {
+        this(UUID.randomUUID().toString(), name, category, price, stock);
     }
 
     // Getters
@@ -63,4 +70,5 @@ public class Product implements Serializable {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
 }
