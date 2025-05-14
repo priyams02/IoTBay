@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DAO {
+    public static String AnonymousUserEmail;
     private final Connection connection;
 
     public final CustomerDBManager customerDB;

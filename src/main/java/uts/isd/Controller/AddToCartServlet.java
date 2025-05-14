@@ -7,6 +7,7 @@ import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.CartDBManager;
 import uts.isd.model.DAO.ProductDBManager;
+import uts.isd.model.OrderLineItem;
 import uts.isd.model.Person.Customer;
 import uts.isd.model.Product;
 

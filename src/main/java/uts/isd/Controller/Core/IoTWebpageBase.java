@@ -19,25 +19,12 @@ public abstract class IoTWebpageBase extends HttpServlet implements IoTWebpage {
     public static final String CSS_LINK = "<link rel=\"stylesheet\" href=\"IoTCore/IoTBayStyles.css\">";
 
     protected static DBConnector connector;
-    protected static DBManager uDB;
-
     @Override
     public void init() throws ServletException {
         super.init();
-        try {
-            // Initialize SQLite connector and DB manager
-            connector = new DBConnector();
-            uDB = new DBManager(connector.getConnection());
-            // Store in context for access in JSPs/servlets
-            getServletContext().setAttribute("UDatabase", uDB);
-            getServletContext().setAttribute("Customers", uDB.customers);
-            getServletContext().setAttribute("Staff", uDB.staff);
-            getServletContext().setAttribute("Products", uDB.products);
-
-            System.out.println("IoTWebpageBase: Database initialized.");
-        } catch (SQLException e) {
-            throw new ServletException("IoTWebpageBase initialization failed", e);
-        }
+        // Initialize SQLite connector and DB manager
+        connector = new DBConnector();
+        System.out.println("IoTWebpageBase: Database initialized.");
     }
 
     @Override
