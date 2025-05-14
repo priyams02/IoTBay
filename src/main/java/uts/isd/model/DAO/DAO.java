@@ -6,12 +6,12 @@ import java.sql.SQLException;
 public class DAO {
     public static String AnonymousUserEmail;
     private final Connection connection;
-
     public final CustomerDBManager customerDB;
     public final StaffDBManager   staffDB;
     public final ProductDBManager  productDB;
     public final CartDBManager     cartDB;
     public final OrderDBManager    orderDB;
+    public final ShipmentDBManager shipmentDB;
 
     public DAO() throws SQLException {
         this.connection = new DBConnector().getConnection();
@@ -20,6 +20,7 @@ public class DAO {
         this.productDB  = new ProductDBManager(connection);
         this.cartDB     = new CartDBManager(connection);
         this.orderDB    = new OrderDBManager(connection);
+        this.shipmentDB = new ShipmentDBManager(connection);
     }
 
     public Connection getConnection() {
@@ -45,6 +46,7 @@ public class DAO {
     public OrderDBManager orders() {
         return orderDB;
     }
+    public ShipmentDBManager shipments() { return shipmentDB;}
 
     public void close() throws SQLException {
         if (connection != null && !connection.isClosed()) {

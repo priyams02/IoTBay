@@ -8,18 +8,25 @@ public class Shipment implements Serializable {
     private static int totalShipments = 0;
 
     private final int shipmentId;
+    private final int orderId;
     private Address destination;
     private String status;
     private String shippingOptions;
 
-    public Shipment(Address destination, String status, String shippingOptions) {
+    public Shipment(int orderId, Address destination, String status, String shippingOptions) {
         this.shipmentId = totalShipments++;
+        this.orderId    = orderId;
         this.destination = destination;
         this.status = status;
         this.shippingOptions = shippingOptions;
     }
 
     // Getters
+
+    public int getOrderId() {
+        return orderId;
+    }
+
     public int getShipmentId() {
         return shipmentId;
     }
