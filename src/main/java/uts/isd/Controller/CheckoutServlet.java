@@ -41,20 +41,20 @@ public class CheckoutServlet extends IoTWebpageBase {
             throw new ServletException("DAO not initialized in session");
         }
         // Managers for cart and orders
-        CartDBManager cartDB = dao.cart();
+        CartDBManager cartDB   = dao.cart();
         OrderDBManager orderDB = dao.orders();
 
         // 1. Retrieve & trim inputs
-        String email       = trim(request.getParameter("email"));
-        String isCustomer  = trim(request.getParameter("isCustomer"));
-        String addressNum  = trim(request.getParameter("addNum"));
-        String addressStreet = trim(request.getParameter("addStreetName"));
-        String addressSuburb = trim(request.getParameter("addSuburb"));
-        String addressPostcode = trim(request.getParameter("addPostcode"));
-        String addressCity = trim(request.getParameter("addCity"));
-        String cardNo      = trim(request.getParameter("CardNo"));
-        String cvv         = trim(request.getParameter("CVV"));
-        String cardHolder  = trim(request.getParameter("CardHolder"));
+        String email            = trim(request.getParameter("email"));
+        String isCustomer       = trim(request.getParameter("isCustomer"));
+        String addressNum       = trim(request.getParameter("addNum"));
+        String addressStreet    = trim(request.getParameter("addStreetName"));
+        String addressSuburb    = trim(request.getParameter("addSuburb"));
+        String addressPostcode  = trim(request.getParameter("addPostcode"));
+        String addressCity      = trim(request.getParameter("addCity"));
+        String cardNo           = trim(request.getParameter("CardNo"));
+        String cvv              = trim(request.getParameter("CVV"));
+        String cardHolder       = trim(request.getParameter("CardHolder"));
 
         // 2. Basic validation
         if (isCustomer.isEmpty() || email.isEmpty()
@@ -74,9 +74,10 @@ public class CheckoutServlet extends IoTWebpageBase {
                 addressPostcode,
                 addressCity
         );
-        PaymentInformation pi = new PaymentInformation(cardNo, cvv, cardHolder,null);
+        PaymentInformation pi = new PaymentInformation(cardNo, cvv, cardHolder, null);
 
-        // 4. Retrieve cart from session or DB
+        // 4. Retrieve cart from session
+        @SuppressWarnings("unchecked")
         List<OrderLineItem> cart = (List<OrderLineItem>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             redirectWithParam(response, "err", "There is nothing in your Cart!");
@@ -84,13 +85,17 @@ public class CheckoutServlet extends IoTWebpageBase {
         }
 
         try {
-            // 5. Persist the order
-            orderDB.makeOrder(email, cart, shipping, pi);
+            // 5) CREATE the order and capture the returned Order object
+            uts.isd.model.Order newOrder = orderDB.makeOrder(email, cart, shipping, pi);
 
-            // 6. Clear cart in DB and session
+            // 6) SAVE the orderId into session so your nav can link to shipments
+            session.setAttribute("lastOrderId", newOrder.getId());
+
+            // 7) clear the cart
             cartDB.clear(email);
             session.removeAttribute("cart");
 
+            // 8) redirect as before
             redirectWithParam(response, "msg", "Order placed successfully");
         } catch (SQLException e) {
             throw new ServletException("Failed to place order", e);
