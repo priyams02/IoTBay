@@ -1,94 +1,68 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%
+  // Pull any validation error & prior values from the request
+  String err   = (String) request.getAttribute("err");
+  String first = (String) request.getAttribute("First");
+  String last  = (String) request.getAttribute("Last");
+  String email = (String) request.getAttribute("Email");
+  String phone = (String) request.getAttribute("PhoneNumber");
+  String num   = (String) request.getAttribute("addNum");
+  String street       = (String) request.getAttribute("addStreetName");
+  String suburb       = (String) request.getAttribute("addSuburb");
+  String postcode     = (String) request.getAttribute("addPostcode");
+  String city         = (String) request.getAttribute("addCity");
+  String ctx = request.getContextPath();
+%>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
-    <link rel="stylesheet" href="styles/IoTBayStyles.css">
+  <title>Register</title>
+  <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
 </head>
-
 <body>
 <div class="IndexDivMain">
-  <!-- Top menu bar thing. -->
   <nav class="navbar">
-    <div>
-      <div class="navLinks left"><a href="index.jsp">Home</a></div>
+    <div class="navLinks left">
+      <a href="<%= ctx %>/index.jsp">Home</a>
     </div>
   </nav>
-    <!-- If the user's passwords didn't match, show the message. -->
-    <p style="text-align:center; color:red">
-      <%
-        String err = request.getParameter("err");
-        if (err != null) {
-          out.println("<br>" + err);
-        }
-      %>
-    </p>
-    <div class="content">
-    <div class="bg"></div>
-    <h1>Create Account</h1>
-      <h2>Register</h2>
-      <div class="register-container">
-        <div class="form-inner">
-          <form action="../RegisterServlet" class="login" method="POST">
 
-            <div class="field">
-              <input type="text" placeholder="First Name" name="First" <%String f = request.getParameter("First");%> required>
-            </div>
+  <!-- show error if set -->
+  <% if (err != null) { %>
+  <p style="text-align:center; color:red"><%= err %></p>
+  <% } %>
 
-            <div class="field">
-              <input type="text" placeholder="Last Name" name="Last" <%String l = request.getParameter("Last");%> required>
-            </div>
+  <h1>Create Account</h1>
+  <form action="<%= ctx %>/RegisterServlet" method="post">
+    <input type="text"  name="First"            placeholder="First Name"
+           value="<%= first  != null ? first  : "" %>" required>
+    <input type="text"  name="Last"             placeholder="Last Name"
+           value="<%= last   != null ? last   : "" %>" required>
+    <input type="email" name="Email"            placeholder="E-Mail Address"
+           value="<%= email  != null ? email  : "" %>" required>
+    <input type="text"  name="PhoneNumber"      placeholder="Phone Number"
+           value="<%= phone  != null ? phone  : "" %>" required>
+    <input type="password" name="Pass1"         placeholder="Password" required>
+    <input type="password" name="Pass2"         placeholder="Confirm Password" required>
+    <input type="text"  name="addNum"           placeholder="Unit/Street No."
+           value="<%= num    != null ? num    : "" %>" required>
+    <input type="text"  name="addStreetName"    placeholder="Street"
+           value="<%= street != null ? street : "" %>" required>
+    <input type="text"  name="addSuburb"        placeholder="Suburb"
+           value="<%= suburb != null ? suburb : "" %>" required>
+    <input type="text"  name="addPostcode"      placeholder="Postcode"
+           value="<%= postcode != null ? postcode : "" %>" required>
+    <input type="text"  name="addCity"          placeholder="City"
+           value="<%= city   != null ? city   : "" %>" required>
 
-            <div class="field">
-              <input type="email" placeholder="E-Mail Address" name="Email" <%String e = request.getParameter("Email");%> required>
-            </div>
+    <label>
+      <input type="checkbox" name="tos" required>
+      Agree to our <span style="color:dodgerblue; cursor:pointer">Terms of Service</span>
+    </label>
 
-            <div class="field">
-              <input type="text" placeholder="Phone Number" name="PhoneNumber" <%String pn = request.getParameter("PhoneNumber");%> required>
-            </div>
-
-            <div class="field">
-              <input type="password" placeholder="Password" name="Pass1" required>
-            </div>
-
-            <div class="field">
-              <input type="password" placeholder="Confirm Password" name="Pass2" required>
-            </div>
-
-            <div class="field">
-              <input type="text" placeHolder="Unit/Street No." name="addNum" <%String n = request.getParameter("addNum");%> required>
-            </div>
-
-            <div class="field">
-              <input type="text" placeHolder="Street" name="addStreetName" <%String sn = request.getParameter("addStreetName");%> required>
-            </div>
-
-            <div class="field">
-              <input type="text" placeHolder="Suburb" name="addSuburb" <%String s = request.getParameter("addSuburb");%> required>
-            </div>
-
-            <div class="field">
-              <input type="text" placeHolder="Postcode" name="addPostcode" <%String p = request.getParameter("addPostcode");%> required>
-            </div>
-
-            <div class="field">
-              <input type="text" placeHolder="City" name="addCity" <%String c = request.getParameter("addCity");%> >
-            </div>
-            <label for="tos">
-              Agree to our
-              <span style="color: dodgerblue; cursor: pointer">Terms of Service</span>
-            </label>
-            <input type="checkbox" id="tos" name="tos" required />
-
-            <div class="field">
-              <input type="submit" value="Register">
-            </div>
-
-            <div class="signup-link">
-              Already Registered? <a href="Login.jsp">Login Here</a>.
-            </div>
-
-          </form>
-      <div class="footer"></div>
+    <button type="submit">Register</button>
+    <p>Already Registered? <a href="<%= ctx %>/LoginServlet">Login Here</a>.</p>
+  </form>
+</div>
 </body>
 </html>

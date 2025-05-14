@@ -3,7 +3,6 @@ package uts.isd.Controller;
 import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.Person.Address;
 import uts.isd.model.Person.Customer;
-import uts.isd.model.Person.PaymentInformation;
 import uts.isd.model.Person.User;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.CustomerDBManager;
@@ -11,32 +10,41 @@ import uts.isd.model.DAO.CustomerDBManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends IoTWebpageBase {
 
+    // 1) GET shows the form
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        super.doPost(request, response);
+        // forward to /register.jsp (in webapp root)
+        req.getRequestDispatcher("/register.jsp")
+                .forward(req, resp);
+    }
 
-        // Pull form parameters
-        String firstName = request.getParameter("First"),
-                lastName  = request.getParameter("Last"),
-                email     = request.getParameter("Email"),
-                phone     = request.getParameter("PhoneNumber"),
-                pass1     = request.getParameter("Pass1"),
-                pass2     = request.getParameter("Pass2"),
-                num       = request.getParameter("addNum"),
-                street    = request.getParameter("addStreetName"),
-                suburb    = request.getParameter("addSuburb"),
-                postcode  = request.getParameter("addPostcode"),
-                city      = request.getParameter("addCity");
+    // 2) POST processes the form
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        super.doPost(req, resp);
 
-        // Initialize DAO & CustomerDBManager
+        // pull parameters
+        String firstName = req.getParameter("First"),
+                lastName  = req.getParameter("Last"),
+                email     = req.getParameter("Email"),
+                phone     = req.getParameter("PhoneNumber"),
+                pass1     = req.getParameter("Pass1"),
+                pass2     = req.getParameter("Pass2"),
+                num       = req.getParameter("addNum"),
+                street    = req.getParameter("addStreetName"),
+                suburb    = req.getParameter("addSuburb"),
+                postcode  = req.getParameter("addPostcode"),
+                city      = req.getParameter("addCity");
+
+        // init DAO
         DAO dao;
         try {
             dao = new DAO();
@@ -45,30 +53,25 @@ public class RegisterServlet extends IoTWebpageBase {
         }
         CustomerDBManager customerDB = dao.customers();
 
-        // Validate
+        // validate
         String error = validateRegistration(
                 customerDB,
                 firstName, lastName, email, phone,
                 pass1, pass2, num, street, suburb, postcode, city
         );
         if (error != null) {
-            String params = redirectParams(
-                    "err", error,
-                    "First", firstName,
-                    "Last", lastName,
-                    "Email", email,
-                    "PhoneNumber", phone,
-                    "addNum", num,
-                    "addStreetName", street,
-                    "addSuburb", suburb,
-                    "addPostcode", postcode,
-                    "addCity", city
-            );
-            response.sendRedirect("IoTCore/Register.jsp?" + params);
+            // on error, stash values & message, then forward back to JSP
+            req.setAttribute("err", error);
+            req.setAttribute("First", firstName);
+            req.setAttribute("Last",  lastName);
+            req.setAttribute("Email", email);
+            // …repeat for PhoneNumber, addNum, etc…
+            req.getRequestDispatcher("/register.jsp")
+                    .forward(req, resp);
             return;
         }
 
-        // Build new Customer object
+        // build & save new customer
         Customer newCustomer = new Customer(
                 firstName,
                 lastName,
@@ -78,22 +81,20 @@ public class RegisterServlet extends IoTWebpageBase {
                 phone,
                 User.UserType.CUSTOMER
         );
-
-        // Persist via CustomerDBManager
         try {
             customerDB.add(newCustomer);
         } catch (SQLException e) {
             throw new ServletException("Error registering user", e);
         }
 
-        // On success: store in session and redirect
-        HttpSession session = request.getSession();
-        session.setAttribute("User", newCustomer);
-        String redirect = redirectParams(
-                "HeadingMessage", "Welcome, " + firstName + "!",
-                "Message", "Thank you for registering with IoTBay! Please wait while we redirect you..."
-        );
-        response.sendRedirect("IoTCore/Redirector.jsp?" + redirect);
+        // on success: login & redirect
+        HttpSession session = req.getSession();
+        session.setAttribute("loggedInUser", newCustomer);
+        String ctx = req.getContextPath();
+        String heading = "Welcome, " + firstName + "!";
+        String message = "Thank you for registering with IoTBay!";
+        resp.sendRedirect(ctx + "/Redirector.jsp?HeadingMessage="
+                + heading + "&Message=" + message);
     }
 
     /**

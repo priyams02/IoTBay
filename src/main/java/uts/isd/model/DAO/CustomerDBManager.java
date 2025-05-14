@@ -34,13 +34,20 @@ public class CustomerDBManager extends AbstractDBManager<Customer> {
             ps.setString(7, clamp(a.getSuburb(), 100));
             ps.setString(8, clamp(a.getPostcode(), 10));
             ps.setString(9, clamp(a.getCity(), 100));
-            ps.setString(10, clamp(c.getPhoneNumber(), 15));
-            ps.setString(11, clamp(p.getCardNo(), 25));
-            ps.setString(12, clamp(p.getCVV(), 5));
-            ps.setString(13, clamp(p.getCardHolder(), 200));
-            ps.setString(14, p.getExpiryDate() != null
-                    ? p.getExpiryDate().toString()
-                    : null);
+            // handle possible null PaymentInformation
+            if (p != null) {
+                ps.setString(10, clamp(c.getPhoneNumber(), 15));
+                ps.setString(11, clamp(p.getCardNo(), 25));
+                ps.setString(12, clamp(p.getCVV(), 5));
+                ps.setString(13, clamp(p.getCardHolder(), 200));
+                ps.setString(14, p.getExpiryDate() != null ? p.getExpiryDate().toString() : null);
+            } else {
+                ps.setString(10, clamp(c.getPhoneNumber(), 15));
+                ps.setNull(11, Types.VARCHAR);
+                ps.setNull(12, Types.VARCHAR);
+                ps.setNull(13, Types.VARCHAR);
+                ps.setNull(14, Types.VARCHAR);
+            }
 
             ps.executeUpdate();
         }
@@ -82,19 +89,32 @@ public class CustomerDBManager extends AbstractDBManager<Customer> {
             ps.setString(2, clamp(newCustomer.getLastName(), 100));
             ps.setString(3, clamp(newCustomer.getPassword(), 100));
             ps.setString(4, clamp(newCustomer.getEmail().toLowerCase(), 100));
-            ps.setString(5, clamp(newCustomer.getPhoneNumber(), 15));
-            ps.setString(6, clamp(a.getNumber(), 10));
-            ps.setString(7, clamp(a.getStreetName(), 100));
-            ps.setString(8, clamp(a.getSuburb(), 100));
-            ps.setString(9, clamp(a.getPostcode(), 10));
-            ps.setString(10, clamp(a.getCity(), 100));
-            ps.setString(11, clamp(p.getCardNo(), 25));
-            ps.setString(12, clamp(p.getCVV(), 5));
-            ps.setString(13, clamp(p.getCardHolder(), 200));
-            ps.setString(14, p.getExpiryDate() != null
-                    ? p.getExpiryDate().toString()
-                    : null);
-            ps.setString(15, oldCustomer.getEmail().toLowerCase());
+            // handle possible null PaymentInformation
+            if (p != null) {
+                ps.setString(5, clamp(newCustomer.getPhoneNumber(), 15));
+                ps.setString(6, clamp(a.getNumber(), 10));
+                ps.setString(7, clamp(a.getStreetName(), 100));
+                ps.setString(8, clamp(a.getSuburb(), 100));
+                ps.setString(9, clamp(a.getPostcode(), 10));
+                ps.setString(10, clamp(a.getCity(), 100));
+                ps.setString(11, clamp(p.getCardNo(), 25));
+                ps.setString(12, clamp(p.getCVV(), 5));
+                ps.setString(13, clamp(p.getCardHolder(), 200));
+                ps.setString(14, p.getExpiryDate() != null ? p.getExpiryDate().toString() : null);
+                ps.setString(15, oldCustomer.getEmail().toLowerCase());
+            } else {
+                ps.setString(5, clamp(newCustomer.getPhoneNumber(), 15));
+                ps.setNull(6, Types.VARCHAR);
+                ps.setNull(7, Types.VARCHAR);
+                ps.setNull(8, Types.VARCHAR);
+                ps.setNull(9, Types.VARCHAR);
+                ps.setNull(10, Types.VARCHAR);
+                ps.setNull(11, Types.VARCHAR);
+                ps.setNull(12, Types.VARCHAR);
+                ps.setNull(13, Types.VARCHAR);
+                ps.setNull(14, Types.VARCHAR);
+                ps.setString(15, oldCustomer.getEmail().toLowerCase());
+            }
 
             ps.executeUpdate();
         }
@@ -131,12 +151,13 @@ public class CustomerDBManager extends AbstractDBManager<Customer> {
                 r.getString("EXPIRYDATE")  // stored as TEXT in SQLite
         );
 
-        Customer c = new Customer(
+        Customer cst = new Customer(
                 firstName, lastName, password, email, a, phone, Customer.UserType.CUSTOMER
         );
-        c.setPaymentInfo(p);
-        return c;
+        cst.setPaymentInfo(p);
+        return cst;
     }
+
     public List<Customer> searchCustomers(String byName) throws SQLException {
         String sql = "SELECT * FROM CUSTOMERS WHERE UPPER(FIRSTNAME) LIKE UPPER(?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -151,11 +172,8 @@ public class CustomerDBManager extends AbstractDBManager<Customer> {
         }
     }
 
-
     private String clamp(String str, int maxLength) {
         if (str == null) return "";
         return (str.length() <= maxLength) ? str : str.substring(0, maxLength);
     }
-
-
 }
