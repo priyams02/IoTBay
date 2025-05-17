@@ -1,11 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%
     String ctx = request.getContextPath();
-    uts.isd.model.Shipment s = (uts.isd.model.Shipment)request.getAttribute("shipment");
+    uts.isd.model.Shipment s = (uts.isd.model.Shipment) request.getAttribute("shipment");
     boolean edit = (s != null);
-    int orderId = edit
-            ? s.getOrderId()
-            : Integer.parseInt(request.getParameter("orderId"));
+
+    // determine orderId: from existing shipment or from query-string
+    String oid = edit
+            ? String.valueOf(s.getOrderId())
+            : request.getParameter("orderId");
+    if (oid == null) {
+        out.println("<p style='color:red;'>Error: missing orderId.</p>");
+        return;
+    }
+    int orderId = Integer.parseInt(oid);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +23,9 @@
 </head>
 <body>
 <h1><%= edit ? "Edit" : "New" %> Shipment for Order #<%= orderId %></h1>
-<form action="<%= ctx %>/Shipment/<%= edit ? "Update" : "Create" %>"
-      method="post">
+<form action="<%= ctx %>/Shipment/<%= edit ? "Update" : "Create" %>" method="post">
     <% if (edit) { %>
-    <input type="hidden" name="id"      value="<%= s.getShipmentId() %>">
+    <input type="hidden" name="id" value="<%= s.getShipmentId() %>">
     <% } %>
     <input type="hidden" name="orderId" value="<%= orderId %>">
 
@@ -55,8 +61,11 @@
         <%= edit ? "Update Shipment" : "Create Shipment" %>
     </button>
 </form>
-<p><a href="<%= ctx %>/Shipment/List?orderId=<%= orderId %>">
-    &larr; Back to Shipments
-</a></p>
+
+<p>
+    <a href="<%= ctx %>/Shipment/List?orderId=<%= orderId %>">
+        &larr; Back to Shipments
+    </a>
+</p>
 </body>
 </html>
