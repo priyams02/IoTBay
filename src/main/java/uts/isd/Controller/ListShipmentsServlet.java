@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.DAO.DAO;
-import uts.isd.model.DAO.ShipmentDBManager;
 import uts.isd.model.Shipment;
 
 import java.io.IOException;
@@ -20,13 +19,13 @@ public class ListShipmentsServlet extends IoTWebpageBase {
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
             DAO dao = new DAO();
-            ShipmentDBManager mgr = dao.shipments();
-            List<Shipment> list = mgr.listByOrder(orderId);
+            // use the new convenience method:
+            List<Shipment> list = dao.listShipmentsByOrder(orderId);
 
             req.setAttribute("shipments", list);
             req.setAttribute("orderId", orderId);
             req.getRequestDispatcher("/shipments.jsp").forward(req, resp);
-        } catch (Exception e) {
+        } catch (NumberFormatException | SQLException e) {
             throw new ServletException("Failed to list shipments", e);
         }
     }
