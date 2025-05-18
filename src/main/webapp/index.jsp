@@ -52,8 +52,9 @@
             <% if (user == null) { %>
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
-            <% } else {
-                // grab the last‐placed order ID from session
+            <% } else { %>
+            <a href="<%= ctx %>/Profile.jsp">View Profile</a>
+            <%    // grab the last‐placed order ID from session
                 Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
             %>
             <% if (lastOrderId != null) { %>

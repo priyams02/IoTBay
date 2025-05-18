@@ -1,10 +1,13 @@
 <%@ page import="uts.isd.model.Person.User" %>
 <%@ page import="uts.isd.model.Person.Staff" %>
+<%@ page import="uts.isd.model.Product" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String ctx = request.getContextPath();
     User user = (User) session.getAttribute("loggedInUser");
     Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
+    List<Product> products = (List<Product>)request.getAttribute("productList");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +49,6 @@
 <header>
     <h1>IoTBay</h1>
     <p>Your one-stop shop for IoT products</p>
-</header>
 
 <div class="container">
     <h2>Featured Products</h2>

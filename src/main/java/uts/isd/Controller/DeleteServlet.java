@@ -2,7 +2,10 @@ package uts.isd.Controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import uts.isd.model.Person.Customer;
 import uts.isd.model.Person.Staff;
 import uts.isd.model.Person.User;
@@ -28,23 +31,27 @@ public class DeleteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
+        String ctx = req.getContextPath();
+        // Redirect to login if no session
         if (session == null) {
-            resp.sendRedirect("Login.jsp");
+            resp.sendRedirect(ctx + "/LoginServlet");
             return;
         }
 
-        // Note: we store the logged-in user under "User" in RegisterServlet
-        User user = (User) session.getAttribute("User");
+        // Retrieve logged-in user from "loggedInUser"
+        User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
-            resp.sendRedirect("Login.jsp");
+            resp.sendRedirect(ctx + "/LoginServlet");
             return;
         }
 
         try {
             if (user.getType() == User.UserType.CUSTOMER) {
-                dao.customers().delete((Customer) user);
-            } else {
-                dao.staff().delete((Staff) user);
+                Customer cust = (Customer) user;
+                dao.customers().delete(cust);
+            } else if (user.getType() == User.UserType.STAFF) {
+                Staff staff = (Staff) user;
+                dao.staff().delete(staff);
             }
         } catch (SQLException e) {
             throw new ServletException(
@@ -52,9 +59,10 @@ public class DeleteServlet extends HttpServlet {
             );
         }
 
-        // Wipe out the session now that their account is gone
+        // Invalidate session after deletion
         session.invalidate();
-        resp.sendRedirect("index.jsp");
+        // Redirect back to home page
+        resp.sendRedirect(ctx + "/index.jsp");
     }
 
     @Override
