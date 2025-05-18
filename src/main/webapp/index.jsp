@@ -53,7 +53,8 @@
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
             <% } else { %>
-            <a href="<%= ctx %>/Profile.jsp">View Profile</a>
+            <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
+            <a href="<%= ctx %>/ViewProfile.jsp">View Profile</a>
             <%    // grab the last‐placed order ID from session
                 Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
             %>

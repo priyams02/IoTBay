@@ -7,7 +7,6 @@ import uts.isd.model.Shipment;
 
 public class DAO {
     public static String AnonymousUserEmail;
-
     private final Connection connection;
     public final CustomerDBManager customerDB;
     public final StaffDBManager   staffDB;
@@ -57,7 +56,6 @@ public class DAO {
     }
 
     public AccessLogDBManager AccessLogs() {return AccessLogDB;}
-    }
 
     // ─── Shipment Methods ───────────────────────────────────────────
 
@@ -92,4 +90,5 @@ public class DAO {
             connection.close();
         }
     }
+
 }

@@ -28,11 +28,11 @@ public class LoginServlet extends IoTWebpageBase {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String ctx = request.getContextPath();
+        String ctx      = request.getContextPath();
         String email    = trim(request.getParameter("Email")).toLowerCase();
         String password = trim(request.getParameter("Password"));
 
-        // Check required fields
+        // 1) Required fields
         if (email.isEmpty() || password.isEmpty()) {
             response.sendRedirect(ctx + "/login.jsp?err=" +
                     URLEncoder.encode("Email and Password required", StandardCharsets.UTF_8) +
@@ -40,7 +40,7 @@ public class LoginServlet extends IoTWebpageBase {
             return;
         }
 
-        // Create a new DAO (instead of expecting it in session)
+        // 2) Create DAO
         DAO dao;
         try {
             dao = new DAO();
@@ -52,10 +52,24 @@ public class LoginServlet extends IoTWebpageBase {
         StaffDBManager    staffDB    = dao.staff();
 
         try {
-            // 1) Customer login
+            // 3) Customer login
             Customer customer = customerDB.findCustomer(email);
             if (customer != null && customer.getPassword().equals(password)) {
-                request.getSession().setAttribute("loggedInUser", customer);
+                HttpSession sess = request.getSession();
+                sess.setAttribute("loggedInUser", customer);
+
+                // ─── DEBUG: before logging ───────────────────────────
+                System.out.println("DEBUG: login success for " + customer.getEmail());
+                try {
+                    System.out.println("DEBUG: calling addLog()");
+                    dao.AccessLogs().addLog(customer.getEmail(), "LOGIN");
+                    System.out.println("DEBUG: addLog() completed");
+                } catch (SQLException e) {
+                    System.err.println("DEBUG: SQLException in addLog():");
+                    e.printStackTrace();
+                }
+                // ──────────────────────────────────────────────────────
+
                 String heading = "Welcome, " + customer.getFirstName() + "!";
                 String message = "Please wait while we redirect you...";
                 response.sendRedirect(ctx + "/Redirector.jsp?HeadingMessage=" +
@@ -65,10 +79,14 @@ public class LoginServlet extends IoTWebpageBase {
                 return;
             }
 
-            // 2) Staff login
+            // 4) Staff login
             Staff staff = staffDB.findStaff(email, password);
             if (staff != null) {
-                request.getSession().setAttribute("loggedInUser", staff);
+                HttpSession sess = request.getSession();
+                sess.setAttribute("loggedInUser", staff);
+
+                // (Optional) you could also log staff logins if desired
+
                 String heading = "Welcome, " + staff.getFirstName() + "!";
                 String message = "Redirecting to admin panel...";
                 response.sendRedirect(ctx + "/Redirector.jsp?HeadingMessage=" +
@@ -78,16 +96,17 @@ public class LoginServlet extends IoTWebpageBase {
                 return;
             }
 
-            // 3) Hard-coded admin fallback
+            // 5) Hard-coded admin
             if ("admin@iotbay.com".equals(email) && "admin".equals(password)) {
                 response.sendRedirect(ctx + "/IoTCore/Administrator/Admin.jsp");
                 return;
             }
 
-            // 4) Failed authentication
+            // 6) Failed auth
             response.sendRedirect(ctx + "/login.jsp?err=" +
                     URLEncoder.encode("Incorrect E-Mail or Password!", StandardCharsets.UTF_8) +
                     "&Email=" + URLEncoder.encode(email, StandardCharsets.UTF_8));
+
         } catch (SQLException e) {
             throw new ServletException("Login failed", e);
         }
