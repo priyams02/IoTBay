@@ -14,26 +14,9 @@
 
     String ctx = request.getContextPath();
     Customer customer = (Customer) session.getAttribute("loggedInUser");
-    String searchId = request.getParameter("searchId");
-    String searchDate = request.getParameter("searchDate");
-    ArrayList<Order> purchaseHistory = new ArrayList<>(customer.getPurchaseHistory());
-    ArrayList<Order> filteredHistory = new ArrayList<>();
-
-    if ((searchId != null && !searchId.isEmpty()) || (searchDate != null && !searchDate.isEmpty())) {
-        for (Order order : purchaseHistory) {
-            boolean matchesId = searchId != null && !searchId.isEmpty() &&
-                    String.valueOf(order.getId()).contains(searchId);
-            boolean matchesDate = searchDate != null && !searchDate.isEmpty() &&
-                    order.getPurchaseDate().toString().contains(searchDate);
-            if ((matchesId && matchesDate) || (matchesId && searchDate.isEmpty()) || (matchesDate && searchId.isEmpty())) {
-                filteredHistory.add(order);
-            }
-        }
-    } else {
-        filteredHistory = purchaseHistory;
-    }
-
-
+    String searchId = (String) request.getAttribute("searchId");
+    String searchDate = (String) request.getAttribute("searchDate");
+    ArrayList<Order> filteredHistory = (ArrayList<Order>) request.getAttribute("filteredHistory");
 %>
 <!DOCTYPE html>
 <html>
@@ -50,7 +33,7 @@
     </nav>
 </div>
 <div class="payment-container">
-    <form method="GET" action="paymentHistory.jsp">
+    <form method="GET" action="<%= ctx %>/SearchPaymentsServlet">
         <label for="searchId">Search by Payment ID:</label>
         <input type="text" id="searchId" name="searchId" value="<%= searchId != null ? searchId : "" %>">
 
