@@ -13,7 +13,7 @@
 <%
 
     String ctx = request.getContextPath();
-    Customer customer = (Customer) session.getAttribute("loggedInUser");
+    User user = (User) session.getAttribute("loggedInUser");
     String searchId = (String) request.getAttribute("searchId");
     String searchDate = (String) request.getAttribute("searchDate");
     ArrayList<Order> filteredHistory = (ArrayList<Order>) request.getAttribute("filteredHistory");
