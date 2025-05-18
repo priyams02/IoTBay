@@ -81,9 +81,7 @@ public class Order implements Serializable {
         return dayPart + ordinal + " of " + month + ", " + year;
     }
 
-    public Address getAddress() {
-        return address;
-    }
+    public Address getAddress() { return address; }
 
     public PaymentInformation getPaymentInformation() {
         return paymentInformation;
