@@ -15,6 +15,7 @@ public class DAO {
     public final CartDBManager     cartDB;
     public final OrderDBManager    orderDB;
     public final ShipmentDBManager shipmentDB;
+    public final AccessLogDBManager AccessLogDB;
 
     public DAO() throws SQLException {
         this.connection = new DBConnector().getConnection();
@@ -24,6 +25,7 @@ public class DAO {
         this.cartDB     = new CartDBManager(connection);
         this.orderDB    = new OrderDBManager(connection);
         this.shipmentDB = new ShipmentDBManager(connection);
+        this.AccessLogDB = new AccessLogDBManager(connection);
     }
 
     public Connection getConnection() {
@@ -52,6 +54,9 @@ public class DAO {
 
     public ShipmentDBManager shipments() {
         return shipmentDB;
+    }
+
+    public AccessLogDBManager AccessLogs() {return AccessLogDB;}
     }
 
     // ─── Shipment Methods ───────────────────────────────────────────

@@ -12,11 +12,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your Profile</title>
+    <title>Edit Your Profile</title>
     <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
 </head>
 <body>
-<h1>Your Profile</h1>
+<h1>Update your Profile</h1>
 
 <% if (active.getType() == UserType.CUSTOMER) {
     Customer cust = (Customer) active;
@@ -37,30 +37,7 @@
         <button type="submit">Update Names</button>
     </form>
 </section>
-<section>
-    <h2>Change Password</h2>
-    <form action="<%= ctx %>/UpdateProfile" method="post">
-        <input type="hidden" name="Attribute"   value="Password">
-        <input type="hidden" name="bIsCustomer" value="yes">
 
-        <label>
-            Current Password:
-            <input type="password" name="Password" required>
-        </label><br>
-
-        <label>
-            New Password:
-            <input type="password" name="Pass1" required>
-        </label><br>
-
-        <label>
-            Confirm Password:
-            <input type="password" name="Pass2" required>
-        </label><br>
-
-        <button type="submit">Update Password</button>
-    </form>
-</section>
 <section>
     <h2>Contact Details</h2>
     <form action="<%= ctx %>/UpdateProfile" method="post">
@@ -71,7 +48,32 @@
         </label><br>
         <button type="submit">Update Email</button>
     </form>
+    <section>
+        <h2>Change Password</h2>
+        <form action="<%= ctx %>/UpdateProfile" method="post">
+            <input type="hidden" name="Attribute"   value="Password">
+            <input type="hidden" name="bIsCustomer" value="yes">
 
+            <label>
+                Current Password:
+                <input type="password" name="Password" required>
+                <input type="hidden" name="bIsCustomer" value="yes">
+            </label><br>
+
+            <label>
+                New Password:
+                <input type="password" name="Pass1" required>
+                <input type="hidden" name="bIsCustomer" value="yes">
+            </label><br>
+
+            <label>
+                Confirm Password:
+                <input type="password" name="Pass2" required>
+            </label><br>
+
+            <button type="submit">Update Password</button>
+        </form>
+    </section>
     <form action="<%= ctx %>/UpdateProfile" method="post">
         <input type="hidden" name="Attribute" value="PhoneNumber">
         <input type="hidden" name="bIsCustomer" value="yes">

@@ -23,7 +23,7 @@ import java.sql.SQLException;
 /**
  * Servlet for updating customer and staff profiles.
  */
-@WebServlet(name = "UpdateProfileServlet", urlPatterns = {"/UpdateProfile", "/Update"})
+@WebServlet(name = "UpdateProfileServlet", urlPatterns = "/UpdateProfile")
 public class UpdateProfileServlet extends IoTWebpageBase {
 
     @Override
@@ -55,53 +55,47 @@ public class UpdateProfileServlet extends IoTWebpageBase {
 
         try {
             if (isCustomer) {
-                // Retrieve original from DB to preserve old email
-                Customer original = (Customer) session.getAttribute("loggedInUser");
-                original = customerDB.findCustomer(original.getEmail());
-                // Build updated copy
-                String fn = trim(request.getParameter("First"));
-                String ln = trim(request.getParameter("Last"));
-                String email = trim(request.getParameter("Email")).toLowerCase();
-                String phone = trim(request.getParameter("PhoneNumber"));
-                Address addr = original.getAddress();
-                PaymentInformation pay = original.getPaymentInfo();
-                Customer updated = new Customer(
-                        fn.isEmpty()    ? original.getFirstName()  : fn,
-                        ln.isEmpty()    ? original.getLastName()   : ln,
-                        original.getPassword(),
-                        email.isEmpty() ? original.getEmail()      : email,
-                        addr,
-                        phone.isEmpty()? original.getPhoneNumber(): phone,
-                        Customer.UserType.CUSTOMER
-                );
-                updated.setPaymentInfo(pay);
-
-                // Handle other attributes
-                if ("Address".equals(attribute)) {
-                    Address a = new Address(
-                            trim(request.getParameter("addNum")),
-                            trim(request.getParameter("addStreetName")),
-                            trim(request.getParameter("addSuburb")),
-                            trim(request.getParameter("addPostcode")),
-                            trim(request.getParameter("addCity"))
-                    );
-                    updated.setAddress(a);
-                } else if ("PaymentInformation".equals(attribute)) {
-                    PaymentInformation pi = new PaymentInformation(
-                            trim(request.getParameter("CardNo")),
-                            trim(request.getParameter("CVV")),
-                            trim(request.getParameter("CardHolder")),
-                            null
-                    );
-                    updated.setPaymentInfo(pi);
+                // Update customer fields
+                Customer cust = (Customer) session.getAttribute("loggedInUser");
+                switch (attribute) {
+                    case "Names":
+                        cust.setFirstName(trim(request.getParameter("First")));
+                        cust.setLastName(trim(request.getParameter("Last")));
+                        break;
+                    case "Email":
+                        cust.setEmail(trim(request.getParameter("Email")).toLowerCase());
+                        break;
+                    case "PhoneNumber":
+                        cust.setPhoneNumber(trim(request.getParameter("PhoneNumber")));
+                        break;
+                    case "Address":
+                        Address addr = new Address(
+                                trim(request.getParameter("addNum")),
+                                trim(request.getParameter("addStreetName")),
+                                trim(request.getParameter("addSuburb")),
+                                trim(request.getParameter("addPostcode")),
+                                trim(request.getParameter("addCity"))
+                        );
+                        cust.setAddress(addr);
+                        break;
+                    case "PaymentInformation":
+                        PaymentInformation pi = new PaymentInformation(
+                                trim(request.getParameter("CardNo")),
+                                trim(request.getParameter("CVV")),
+                                trim(request.getParameter("CardHolder")),
+                                null
+                        );
+                        cust.setPaymentInfo(pi);
+                        break;
+                    default:
+                        // No-op for other cases
                 }
 
-                // Persist changes using old email key
-                customerDB.update(original, updated);
-                // Refresh session under both attributes
-                session.setAttribute("loggedInUser", updated);
-                session.setAttribute("User", updated);
-                // Redirect back with success
+                // Persist changes
+                customerDB.update(cust, cust);
+                // Refresh session
+                session.setAttribute("loggedInUser", cust);
+                // Redirect back with success message
                 response.sendRedirect(ctx + "/Profile?upd="
                         + URLEncoder.encode(attribute + " Updated!", StandardCharsets.UTF_8));
                 return;
@@ -113,8 +107,6 @@ public class UpdateProfileServlet extends IoTWebpageBase {
                 staff.setFirstName(trim(request.getParameter("First")));
                 staff.setLastName(trim(request.getParameter("Last")));
                 staffDB.update(staff, staff);
-                session.setAttribute("User", staff);
-                session.setAttribute("loggedInUser", staff);
                 response.sendRedirect(ctx + "/Profile?upd=Names Updated!");
                 return;
             }

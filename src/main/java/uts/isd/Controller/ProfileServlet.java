@@ -20,10 +20,10 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && session.getAttribute("User") != null) {
-            User user = (User) session.getAttribute("User");
-            req.setAttribute("user", user);
-            req.getRequestDispatcher("/WEB-INF/profile.jsp")
+        if (session != null && session.getAttribute("loggedInUser") != null) {
+            User user = (User) session.getAttribute("loggedInUser");
+            req.setAttribute("loggedInUser", user);
+            req.getRequestDispatcher("/Profile.jsp")
                     .forward(req, resp);
         } else {
             // not logged in → back to login

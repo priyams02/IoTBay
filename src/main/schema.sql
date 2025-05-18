@@ -46,12 +46,6 @@ CREATE TABLE IF NOT EXISTS ORDERLINEITEM (
                                              FOREIGN KEY (OWNER)     REFERENCES CUSTOMERS(EMAIL)   ON DELETE CASCADE,
                                              FOREIGN KEY (PRODUCTID) REFERENCES PRODUCTS(PRODUCTID)
 );
-UPDATE CUSTOMERS
-SET EMAIL = 'new@example.com'
-WHERE EMAIL = 'brycekoh420@gmail.com';
-
-SELECT * FROM CUSTOMERS
--- ORDERS
 CREATE TABLE IF NOT EXISTS ORDERS (
                                       ORDERID       INTEGER  PRIMARY KEY AUTOINCREMENT,
                                       OWNER         TEXT     NOT NULL,
