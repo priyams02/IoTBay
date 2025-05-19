@@ -2,6 +2,8 @@
 <%@ page import="uts.isd.model.Person.User, uts.isd.model.Person.User.UserType, uts.isd.model.Person.Customer, uts.isd.model.Person.Staff, uts.isd.model.Person.Address, uts.isd.model.Person.PaymentInformation" %>
 <%
     String ctx = request.getContextPath();
+    User user = (User) session.getAttribute("loggedInUser");
+
     User active = (User) session.getAttribute("loggedInUser");
     if (active == null) {
         response.sendRedirect(ctx + "/LoginServlet");
@@ -14,8 +16,30 @@
     <meta charset="UTF-8">
     <title>Edit Your Profile</title>
     <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
+    <link rel="stylesheet" href="<%= ctx %>/styles/profile-page.css">
 </head>
 <body>
+<!-- Top Menu Bar -->
+<nav class="navbar">
+    <div class="navLinks left">
+        <a href="<%= ctx %>/index.jsp">Home</a>
+    </div>
+    <div class="navLinks right">
+        <a href="<%= ctx %>/shop.jsp">Shop</a>
+        <% if (user == null) { %>
+        <a href="<%= ctx %>/LoginServlet">Login</a>
+        <a href="<%= ctx %>/RegisterServlet">Register</a>
+        <% } else { %>
+        <!-- Hard-coded Profile links -->
+        <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
+        <a href="<%= ctx %>/ViewProfile.jsp">View Profile</a>
+        <!-- Hard-coded Shipments link always pointing to orderId=1 -->
+        <a href="<%= ctx %>/Shipment/List?orderId=1">Shipments</a>
+        <a href="<%= ctx %>/LogoutServlet">Logout</a>
+        <% } %>
+    </div>
+</nav>
+<div class="profile-wrapper">
 <h1>Update your Profile</h1>
 
 <% if (active.getType() == UserType.CUSTOMER) {
@@ -151,5 +175,6 @@
 </section>
 
 <p><a href="<%= ctx %>/index.jsp">&larr; Back Home</a></p>
+    <div>
 </body>
 </html>

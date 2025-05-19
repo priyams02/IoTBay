@@ -1,0 +1,74 @@
+.profile-wrapper {
+    max-width: 800px;
+    margin: 60px auto;
+    background-color: #fff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+}
+
+.profile-wrapper h1, .profile-wrapper h2 {
+    color: #232f3e;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.profile-wrapper form {
+    margin-bottom: 40px;
+}
+
+.profile-wrapper label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.profile-wrapper input[type="text"],
+.profile-wrapper input[type="email"],
+.profile-wrapper input[type="password"],
+.profile-wrapper input[type="tel"],
+.profile-wrapper input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.profile-wrapper button {
+    background-color: #232f3e;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.profile-wrapper button:hover {
+    background-color: #37475a;
+}
+
+.profile-wrapper a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #232f3e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.profile-wrapper a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .profile-wrapper {
+        padding: 25px;
+    }
+}

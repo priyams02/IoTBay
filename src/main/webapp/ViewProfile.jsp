@@ -21,6 +21,26 @@
     <link rel="stylesheet" href="<%=ctx%>/styles/IoTBayStyles.css">
 </head>
 <body>
+<!-- Top Menu Bar -->
+<nav class="navbar">
+    <div class="navLinks left">
+        <a href="<%= ctx %>/index.jsp">Home</a>
+    </div>
+    <div class="navLinks right">
+        <a href="<%= ctx %>/shop.jsp">Shop</a>
+        <% if (user == null) { %>
+        <a href="<%= ctx %>/LoginServlet">Login</a>
+        <a href="<%= ctx %>/RegisterServlet">Register</a>
+        <% } else { %>
+        <!-- Hard-coded Profile links -->
+        <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
+        <a href="<%= ctx %>/ViewProfile.jsp">View Profile</a>
+        <!-- Hard-coded Shipments link always pointing to orderId=1 -->
+        <a href="<%= ctx %>/Shipment/List?orderId=1">Shipments</a>
+        <a href="<%= ctx %>/LogoutServlet">Logout</a>
+        <% } %>
+    </div>
+</nav>
 <h1>Welcome, <%= user.getFirstName() %>!</h1>
 
 <!-- PROFILE INFO -->
