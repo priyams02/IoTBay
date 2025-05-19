@@ -20,7 +20,7 @@ import java.util.List;
  * Servlet for staff to add new products to IoTBay.
  */
 @WebServlet(name = "AddProduct", urlPatterns = "/AddProduct")
-public class AddProductServlet extends IoTWebpageBase {
+public class  AddProductServlet extends IoTWebpageBase {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
