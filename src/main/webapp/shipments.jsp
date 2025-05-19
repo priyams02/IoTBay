@@ -28,6 +28,9 @@
         out.println("<p style='color:red;'>No shipments found for order #" + orderId + ".</p>");
         return;
     }
+
+    // 3) Pager settings
+    int maxPage = 5;  // hard-coded number of pages (1…5)
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,14 +38,31 @@
     <meta charset="UTF-8">
     <title>Shipments for Order #<%= orderId %></title>
     <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
+    <style>
+        /* Pager styling */
+        .pagination { list-style: none; display: flex; gap: .5em; padding: 0; margin-top: 1em; }
+        .pagination li { display: inline; }
+        .pagination a, .pagination span {
+            display: block; padding: .5em .75em; text-decoration: none;
+            border: 1px solid #666; border-radius: 4px; color: #333;
+        }
+        .pagination .active span {
+            background: #333; color: #fff; border-color: #333; cursor: default;
+        }
+        .pagination .disabled span {
+            color: #aaa; border-color: #aaa; cursor: default;
+        }
+    </style>
 </head>
 <body>
 <h1>Shipments for Order #<%= orderId %></h1>
+
 <p>
     <a href="<%= ctx %>/Shipment/Create?orderId=<%= orderId %>">
         Create New Shipment
     </a>
 </p>
+
 <table border="1" cellpadding="6">
     <tr>
         <th>ID</th>
@@ -65,7 +85,7 @@
         <td><%= s.getShippingOptions() %></td>
         <td>
             <a href="<%= ctx %>/Shipment/Update?id=<%= s.getShipmentId()
-                      %>&orderId=<%= orderId %>">Edit</a>
+                    %>&orderId=<%= orderId %>">Edit</a>
             &nbsp;|&nbsp;
             <form action="<%= ctx %>/Shipment/Delete" method="post" style="display:inline">
                 <input type="hidden" name="id"      value="<%= s.getShipmentId() %>">
@@ -76,6 +96,39 @@
     </tr>
     <% } %>
 </table>
+
+<!-- ─── Pager ────────────────────────────────────────── -->
+<ul class="pagination">
+    <!-- Prev -->
+    <li class="<%= orderId <= 1 ? "disabled" : "" %>">
+        <% if (orderId > 1) { %>
+        <a href="<%= ctx %>/Shipment/List?orderId=<%= orderId - 1 %>">Prev</a>
+        <% } else { %>
+        <span>Prev</span>
+        <% } %>
+    </li>
+
+    <!-- Page numbers 1…maxPage -->
+    <% for (int i = 1; i <= maxPage; i++) { %>
+    <li class="<%= (i == orderId) ? "active" : "" %>">
+        <% if (i == orderId) { %>
+        <span><%= i %></span>
+        <% } else { %>
+        <a href="<%= ctx %>/Shipment/List?orderId=<%= i %>"><%= i %></a>
+        <% } %>
+    </li>
+    <% } %>
+
+    <!-- Next -->
+    <li class="<%= orderId >= maxPage ? "disabled" : "" %>">
+        <% if (orderId < maxPage) { %>
+        <a href="<%= ctx %>/Shipment/List?orderId=<%= orderId + 1 %>">Next</a>
+        <% } else { %>
+        <span>Next</span>
+        <% } %>
+    </li>
+</ul>
+
 <p><a href="<%= ctx %>/index.jsp">Back Home</a></p>
 </body>
 </html>

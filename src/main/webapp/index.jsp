@@ -31,14 +31,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>IoTBay</title>
     <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
-    <style>
-        .navDisabled {
-            color: #666;
-            cursor: not-allowed;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-    </style>
 </head>
 <body>
 <div class="IndexDivMain">
@@ -52,18 +44,9 @@
             <% if (user == null) { %>
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
-            <% } else {
-                // grab the last‐placed order ID from session
-                Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
-            %>
-            <% if (lastOrderId != null) { %>
-            <a href="<%= ctx %>/Shipment/List?orderId=<%= lastOrderId %>">
-                Shipments
-            </a>
             <% } else { %>
-            <!-- no orders yet, disable link -->
-            <span class="navDisabled">Shipments</span>
-            <% } %>
+            <!-- Hard-coded Shipments link always pointing to orderId=1 -->
+            <a href="<%= ctx %>/Shipment/List?orderId=1">Shipments</a>
             <a href="<%= ctx %>/LogoutServlet">Logout</a>
             <% } %>
         </div>
