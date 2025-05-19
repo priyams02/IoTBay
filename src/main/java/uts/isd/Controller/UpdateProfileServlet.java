@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * Servlet for updating customer and staff profiles.
  */
 @WebServlet(name = "UpdateProfileServlet", urlPatterns = "/UpdateProfile")
-public class UpdateProfileServlet extends IoTWebpageBase {
+public abstract class UpdateProfileServlet extends IoTWebpageBase {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -129,4 +129,6 @@ public class UpdateProfileServlet extends IoTWebpageBase {
     private String trim(String s) {
         return s == null ? "" : s.trim();
     }
+
+    protected abstract DAO createDAO();
 }

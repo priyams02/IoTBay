@@ -8,7 +8,7 @@ import java.io.IOException;
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         // Don't create a new session if one doesn't exist
         HttpSession session = req.getSession(false);
