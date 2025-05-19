@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List, uts.isd.model.AccessLog, uts.isd.model.Person.User" %>
+<%@ page import="uts.isd.model.Person.PaymentInformation" %>
 <%
     String ctx = request.getContextPath();
     User user = (User) session.getAttribute("loggedInUser");
@@ -52,7 +53,23 @@
     <p><strong>Name:</strong> <%= user.getFirstName() %> <%= user.getLastName() %></p>
     <p><strong>Address:</strong><%= user.getAddress() %></p>
     <p><strong>Password:</strong><%= user.getPassword() %></p>
-    <p><strong>Payment Information:<%=user.getPaymentInfo()%></strong></p>
+    <%
+        PaymentInformation pi = user.getPaymentInfo();
+        if (pi != null && pi.getCardNo() != null && !pi.getCardNo().isEmpty()) {
+            // Mask card number for display
+            String cardMasked = "**** **** **** " + pi.getCardNo().substring(Math.max(pi.getCardNo().length() - 4, 0));
+    %>
+    <p><strong>Card Number:</strong> <%= cardMasked %></p>
+    <p><strong>Card Holder:</strong> <%= pi.getCardHolder() %></p>
+    <p><strong>Expiry Date:</strong> <%= pi.getExpiryDate() != null ? pi.getExpiryDate() : "N/A" %></p>
+    <%
+    } else {
+    %>
+    <p><strong>Payment Information:</strong> Not Provided</p>
+    <%
+        }
+    %>
+
     <p><a href="<%=ctx%>/Profile.jsp">update Profile</a></p>
 </section>
 
@@ -98,6 +115,6 @@
 
 <p style="margin-top:2em;"><a href="<%=ctx%>/index.jsp">&larr; Home</a></p>
 
-<div>
+</div>
 </body>
 </html>

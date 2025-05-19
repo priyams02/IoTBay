@@ -41,6 +41,15 @@
 </nav>
 <div class="profile-wrapper">
 <h1>Update your Profile</h1>
+    <!-- Update message-->
+    <%
+        String upd = request.getParameter("upd");
+        if (upd != null && !upd.isEmpty()) {
+    %>
+    <p style="color: green; font-weight: bold; margin-bottom: 20px;"><%= upd %></p>
+    <%
+        }
+    %>
 
 <% if (active.getType() == UserType.CUSTOMER) {
     Customer cust = (Customer) active;
@@ -175,6 +184,6 @@
 </section>
 
 <p><a href="<%= ctx %>/index.jsp">&larr; Back Home</a></p>
-    <div>
+    </div>
 </body>
 </html>
