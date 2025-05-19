@@ -1,0 +1,136 @@
+.view-profile-wrapper {
+    max-width: 900px;
+    margin: 60px auto;
+    background-color: #ffffff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+}
+
+/* Headings */
+.view-profile-wrapper h1,
+.view-profile-wrapper h2 {
+    color: #232f3e;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Paragraph Info */
+.view-profile-wrapper p {
+    margin: 10px 0;
+    font-size: 1.05em;
+}
+
+.view-profile-wrapper strong {
+    color: #444;
+}
+
+/* Filter form */
+.view-profile-wrapper form {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.view-profile-wrapper input[type="date"] {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.view-profile-wrapper button {
+    background-color: #232f3e;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.view-profile-wrapper button:hover {
+    background-color: #37475a;
+}
+
+.view-profile-wrapper a {
+    text-decoration: none;
+    color: #232f3e;
+    font-weight: 500;
+}
+
+.view-profile-wrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Logs Table */
+.view-profile-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95em;
+}
+
+.view-profile-wrapper th, .view-profile-wrapper td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.view-profile-wrapper th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.view-profile-wrapper tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+@media (max-width: 768px) {
+    .view-profile-wrapper {
+        padding: 25px;
+    }
+
+    .view-profile-wrapper form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-profile-wrapper table,
+    .view-profile-wrapper thead,
+    .view-profile-wrapper tbody,
+    .view-profile-wrapper th,
+    .view-profile-wrapper td,
+    .view-profile-wrapper tr {
+        display: block;
+        width: 100%;
+    }
+
+    .view-profile-wrapper tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .view-profile-wrapper td {
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .view-profile-wrapper td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .view-profile-wrapper th {
+        display: none;
+    }
+}

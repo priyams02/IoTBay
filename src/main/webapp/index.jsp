@@ -45,6 +45,9 @@
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
             <% } else { %>
+            <!-- Hard-coded Profile links -->
+            <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
+            <a href="<%= ctx %>/ViewProfile.jsp">View Profile</a>
             <!-- Hard-coded Shipments link always pointing to orderId=1 -->
             <a href="<%= ctx %>/Shipment/List?orderId=1">Shipments</a>
             <a href="<%= ctx %>/LogoutServlet">Logout</a>
