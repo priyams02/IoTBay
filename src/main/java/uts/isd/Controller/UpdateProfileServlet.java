@@ -96,7 +96,7 @@ public class UpdateProfileServlet extends IoTWebpageBase {
                 // Refresh session
                 session.setAttribute("loggedInUser", cust);
                 // Redirect back with success message
-                response.sendRedirect(ctx + "/Profile?upd="
+                response.sendRedirect(ctx + "/Profile.jsp?upd="
                         + URLEncoder.encode(attribute + " Updated!", StandardCharsets.UTF_8));
                 return;
             }
@@ -107,7 +107,7 @@ public class UpdateProfileServlet extends IoTWebpageBase {
                 staff.setFirstName(trim(request.getParameter("First")));
                 staff.setLastName(trim(request.getParameter("Last")));
                 staffDB.update(staff, staff);
-                response.sendRedirect(ctx + "/Profile?upd=Names Updated!");
+                response.sendRedirect(ctx + "/Profile.jsp?upd=Names Updated!");
                 return;
             }
 

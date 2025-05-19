@@ -19,6 +19,7 @@
     <meta charset="UTF-8">
     <title>Your Profile & Access Logs</title>
     <link rel="stylesheet" href="<%=ctx%>/styles/IoTBayStyles.css">
+    <link rel="stylesheet" href="<%=ctx%>/styles/view-profile.css">
 </head>
 <body>
 <!-- Top Menu Bar -->
@@ -41,6 +42,7 @@
         <% } %>
     </div>
 </nav>
+<div class="view-profile-wrapper">
 <h1>Welcome, <%= user.getFirstName() %>!</h1>
 
 <!-- PROFILE INFO -->
@@ -51,7 +53,7 @@
     <p><strong>Address:</strong><%= user.getAddress() %></p>
     <p><strong>Password:</strong><%= user.getPassword() %></p>
     <p><strong>Payment Information:<%=user.getPaymentInfo()%></strong></p>
-    <p><a href="<%=ctx%>/Profile">update Profile</a></p>
+    <p><a href="<%=ctx%>/Profile.jsp">update Profile</a></p>
 </section>
 
 <!-- ACCESS LOGS -->
@@ -95,5 +97,7 @@
 </section>
 
 <p style="margin-top:2em;"><a href="<%=ctx%>/index.jsp">&larr; Home</a></p>
+
+<div>
 </body>
 </html>
