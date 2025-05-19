@@ -18,7 +18,7 @@ import java.sql.SQLException;
 /**
  * Servlet for staff to add new products to IoTBay.
  */
-@WebServlet("/EditPaymentDetailsServlet")
+@WebServlet("/DeletePaymentDetailsServlet")
 public class DeletePaymentDetailsServlet extends IoTWebpageBase {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)

@@ -22,7 +22,7 @@
 </head>
 <body>
 <h1>Update Payment Details</h1>
-<form method="post" action="<%= ctx %>/UpdatePaymentDetails">
+<form method="post" action="<%= ctx %>/EditPaymentDetailsServlet">
     <!-- registered email (or blank for guest) -->
     <input type="hidden" name="email" value="<%= email %>">
     <!-- shipping address -->
