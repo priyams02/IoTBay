@@ -1,4 +1,4 @@
-package uts.isd.controller;
+package uts.isd.Controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
