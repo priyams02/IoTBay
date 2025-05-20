@@ -4,7 +4,6 @@
 <%
     String ctx = request.getContextPath();
     User user = (User) session.getAttribute("loggedInUser");
-    Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,16 +12,9 @@
     <title>IoTBay - Shop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<%= ctx %>/styles/IoTBayStyles.css">
-    <style>
-        .navDisabled {
-            color: #666;
-            cursor: not-allowed;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-    </style>
 </head>
 <body>
+<!-- Top Menu Bar -->
 <nav class="navbar">
     <div class="navLinks left">
         <a href="<%= ctx %>/index.jsp">Home</a>
@@ -33,21 +25,23 @@
         <a href="<%= ctx %>/LoginServlet">Login</a>
         <a href="<%= ctx %>/RegisterServlet">Register</a>
         <% } else { %>
-        <% if (lastOrderId != null) { %>
-        <a href="<%= ctx %>/Shipment/List?orderId=<%= lastOrderId %>">Shipments</a>
-        <% } else { %>
-        <span class="navDisabled">Shipments</span>
-        <% } %>
+        <!-- Hard-coded Profile links -->
+        <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
+        <a href="<%= ctx %>/ViewProfile.jsp">View Profile</a>
+        <!-- Hard-coded Shipments link always pointing to orderId=1 -->
+        <a href="<%= ctx %>/Shipment/List?orderId=1">Shipments</a>
         <a href="<%= ctx %>/LogoutServlet">Logout</a>
         <% } %>
     </div>
 </nav>
 
+<!-- Page Header -->
 <header>
     <h1>IoTBay</h1>
     <p>Your one-stop shop for IoT products</p>
 </header>
 
+<!-- Featured Products -->
 <div class="container">
     <h2>Featured Products</h2>
     <div class="product-list">
