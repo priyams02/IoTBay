@@ -49,25 +49,23 @@
         </div>
         <div class="navLinks right">
             <a href="<%= ctx %>/shop.jsp">Shop</a>
+            <a href="<%= ctx %>/ViewOrders">Orders</a>
             <% if (user == null) { %>
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
             <% } else {
-                // grab the last‐placed order ID from session
                 Integer lastOrderId = (Integer) session.getAttribute("lastOrderId");
             %>
             <% if (lastOrderId != null) { %>
-            <a href="<%= ctx %>/Shipment/List?orderId=<%= lastOrderId %>">
-                Shipments
-            </a>
+            <a href="<%= ctx %>/Shipment/List?orderId=<%= lastOrderId %>">Shipments</a>
             <% } else { %>
-            <!-- no orders yet, disable link -->
             <span class="navDisabled">Shipments</span>
             <% } %>
             <a href="<%= ctx %>/LogoutServlet">Logout</a>
             <% } %>
         </div>
     </nav>
+
 
     <h1 class="IndexH1">IoTBay</h1>
 

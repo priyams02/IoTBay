@@ -51,10 +51,10 @@ public class UpdateOrderServlet extends IoTWebpageBase {
                             existingOrder.getPaymentInformation()
                     );
                     dao.orders().update(existingOrder, updatedOrder);
-                    response.sendRedirect("Orders.jsp?msg=Order updated");
+                    response.sendRedirect("Orders?msg=Order updated");
                     return;
                 } else {
-                    response.sendRedirect("Orders.jsp?msg=Order not editable");
+                    response.sendRedirect("Orders?msg=Order not editable");
                     return;
                 }
             } catch (Exception e) {

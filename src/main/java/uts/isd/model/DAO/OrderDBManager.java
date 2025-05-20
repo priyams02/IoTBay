@@ -115,7 +115,7 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         return orders;
     }
 
-    // ✅ NEW: Search orders by date
+    // NEW: Search orders by date
     public List<Order> findOrdersByDate(String owner, String date) throws SQLException {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM ORDERS WHERE OWNER = ? AND DATE(PURCHASEDATE) = ?";
@@ -130,6 +130,8 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         }
         return orders;
     }
+
+
 
     public void cancelOrder(int orderId, String owner) throws SQLException {
         Order order = findOrder(orderId, owner);
@@ -171,6 +173,7 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         throw new UnsupportedOperationException("Physical delete not supported");
     }
 
+    // --- FIXED: Correctly reconstruct order items from PRODUCTS/QUANTITY columns ---
     private Order resultSetToOrder(ResultSet r) throws SQLException {
         int id = r.getInt("ORDERID");
         Customer owner = new CustomerDBManager(connection)
@@ -191,9 +194,29 @@ public class OrderDBManager extends AbstractDBManager<Order> {
                 r.getString("CARDHOLDER"),
                 null
         );
-        List<OrderLineItem> items = new CartDBManager(connection)
-                .listCart(owner.getEmail());
+        // Correct: Parse from order row, not from cart!
+        List<OrderLineItem> items = parseOrderLineItems(
+                r.getString("PRODUCTS"),
+                r.getString("QUANTITY")
+        );
         return new Order(id, owner, new ArrayList<>(items), price, status, addr, pi);
+    }
+
+    // Helper to reconstruct line items from PRODUCTS and QUANTITY fields
+    private List<OrderLineItem> parseOrderLineItems(String productsField, String quantityField) throws SQLException {
+        List<OrderLineItem> items = new ArrayList<>();
+        if (productsField == null || quantityField == null) return items;
+        String[] pids = productsField.split(":");
+        String[] quants = quantityField.split(":");
+        ProductDBManager prodDao = new ProductDBManager(connection);
+        for (int i = 0; i < pids.length && i < quants.length; i++) {
+            if (!pids[i].isEmpty() && !quants[i].isEmpty()) {
+                Product prod = prodDao.findProduct(pids[i]);
+                int quantity = Integer.parseInt(quants[i]);
+                items.add(new OrderLineItem(prod, null, quantity));
+            }
+        }
+        return items;
     }
 
     private String clamp(String s, int max) {

@@ -32,7 +32,7 @@ public class CancelOrderServlet extends IoTWebpageBase {
 
         String oidParam = trim(request.getParameter("oid"));
         if (oidParam.isEmpty()) {
-            redirectWithParam(response, "error", "Order ID is required");
+            redirectWithParam(response, "msg", "Order ID is required");
             return;
         }
 
@@ -40,19 +40,19 @@ public class CancelOrderServlet extends IoTWebpageBase {
         try {
             orderId = Integer.parseInt(oidParam);
         } catch (NumberFormatException e) {
-            redirectWithParam(response, "error", "Invalid order ID");
+            redirectWithParam(response, "msg", "Invalid order ID");
             return;
         }
 
         String owner = trim(request.getParameter("owner"));
         if (owner.isEmpty()) {
-            redirectWithParam(response, "error", "Owner email is required");
+            redirectWithParam(response, "msg", "Owner email is required");
             return;
         }
 
         try {
             orderDB.cancelOrder(orderId, owner);
-            redirectWithParam(response, "upd", "Cancelled Order!");
+            redirectWithParam(response, "msg", "Order cancelled!");
         } catch (SQLException e) {
             throw new ServletException("Error cancelling order", e);
         }
@@ -62,7 +62,7 @@ public class CancelOrderServlet extends IoTWebpageBase {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward to orders page
-        request.getRequestDispatcher("IoTCore/Orders.jsp").forward(request, response);
+        request.getRequestDispatcher("orders.jsp").forward(request, response);
     }
 
     /** Null-safe trim */
@@ -74,6 +74,7 @@ public class CancelOrderServlet extends IoTWebpageBase {
     private void redirectWithParam(HttpServletResponse response, String key, String val)
             throws IOException {
         String enc = URLEncoder.encode(val, StandardCharsets.UTF_8);
-        response.sendRedirect("IoTCore/Orders.jsp?" + key + "=" + enc);
+        // This is the KEY LINE: always redirect to the servlet, not directly to the JSP!
+        response.sendRedirect("Orders?" + key + "=" + enc);
     }
 }
