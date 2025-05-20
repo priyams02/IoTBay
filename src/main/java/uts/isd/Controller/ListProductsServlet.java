@@ -12,30 +12,45 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "ListProducts", urlPatterns = "/ListProducts")
+@WebServlet("/ListProducts")
 public class ListProductsServlet extends IoTWebpageBase {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("dao") == null) {
-            resp.sendRedirect("login.jsp");
-            return;
-        }
-
-        DAO dao = (DAO) session.getAttribute("dao");
-        ProductDBManager productDB = dao.products();
-
         try {
-            List<Product> products = productDB.listAll();
-            session.removeAttribute("searchedProducts"); // ✅ Clear search override
-            req.setAttribute("products", products);
+            // 1. Instantiate a fresh DAO (no session required)
+            DAO dao = new DAO();
+            ProductDBManager productDB = dao.products();
 
-            req.getRequestDispatcher("/Listing.jsp").forward(req, resp);
+            // 2. Read optional 'search' parameter
+            String search = req.getParameter("search");
+
+            // 3. Fetch either all products or the filtered list
+            List<Product> products;
+            if (search != null && !search.isEmpty()) {
+                products = productDB.search(search);
+            } else {
+                products = productDB.listAll();
+            }
+
+            // 4. Make them available to the JSP
+            req.setAttribute("products", products);
+            req.setAttribute("searchParam", search);
+
+            // 5. Forward to your Listing.jsp
+            req.getRequestDispatcher("/Listing.jsp")
+                    .forward(req, resp);
+
         } catch (SQLException e) {
-            throw new ServletException("Unable to retrieve product list", e);
+            throw new ServletException("Failed to list products", e);
         }
     }
-}
 
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        // If you ever post to this URL, delegate back to GET
+        doGet(req, resp);
+    }
+}

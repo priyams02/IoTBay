@@ -2,6 +2,23 @@
 <%@ page import="uts.isd.model.Product" %>
 <%@ page import="uts.isd.model.Person.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // get list from servlet
+    List<Product> products = (List<Product>) request.getAttribute("products");
+    String searchParam = (String) request.getAttribute("searchParam");
+    User user = (User) session.getAttribute("loggedInUser");
+    boolean isStaff = user != null && user.getType() == User.UserType.STAFF;
+
+    // DEBUG
+    if (products == null) {
+        System.out.println("🕵️ Listing.jsp: products == null");
+    } else {
+        System.out.println("🕵️ Listing.jsp: products size = " + products.size());
+        for (Product p : products) {
+            System.out.println("    → " + p.getProductId() + " | " + p.getName());
+        }
+    }
+%>
 <html>
 <head>
     <title>IoTBay | Product Listing</title>
@@ -22,13 +39,15 @@
 <!-- Search Form -->
 <div class="search-box">
     <form method="post" action="<%= request.getContextPath() %>/SearchProduct">
-        <input type="text" name="Params" placeholder="Search by name..." value="<%= request.getParameter("param") != null ? request.getParameter("param") : "" %>" />
+        <input type="text" name="Params"
+               placeholder="Search by name..."
+               value="<%= searchParam != null ? searchParam : "" %>" />
         <input type="submit" value="Search" />
         <a href="<%= request.getContextPath() %>/ListProducts">Clear</a>
     </form>
 </div>
 
-<!-- Display messages -->
+<!-- Messages -->
 <%
     String msg = request.getParameter("msg");
     String err = request.getParameter("err");
@@ -41,26 +60,14 @@
 <div class="error"><%= err %></div>
 <%
     }
-
-    List<Product> products = (List<Product>) session.getAttribute("searchedProducts");
-    if (products == null) {
-        products = (List<Product>) request.getAttribute("products");
-    }
-
-    User user = (User) session.getAttribute("loggedInUser");
-    boolean isStaff = user != null && user.getType() == User.UserType.STAFF;
 %>
 
 <!-- Product Table -->
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Actions</th>
+        <th>ID</th><th>Name</th><th>Category</th>
+        <th>Price</th><th>Stock</th><th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -68,10 +75,6 @@
         if (products != null && !products.isEmpty()) {
             for (Product p : products) {
     %>
-    <%
-        System.out.println("Listing.jsp - products size: " + (products == null ? "null" : products.size()));
-    %>
-
     <tr>
         <td><%= p.getProductId() %></td>
         <td><%= p.getName() %></td>
@@ -79,14 +82,19 @@
         <td>$<%= String.format("%.2f", p.getPrice()) %></td>
         <td><%= p.getStock() %></td>
         <td>
-            <a href="<%= request.getContextPath() %>/ViewProduct?id=<%= p.getProductId() %>">View</a>
+            <a href="<%= request.getContextPath() %>/ViewProduct?id=<%= p.getProductId() %>">
+                View Details
+            </a>
+            </a>
             <%
                 if (isStaff) {
             %>
             | <a href="<%= request.getContextPath() %>/UpdateProduct?id=<%= p.getProductId() %>">Edit</a>
-            <form action="<%= request.getContextPath() %>/DeleteProduct" method="post" style="display:inline;">
+            <form action="<%= request.getContextPath() %>/DeleteProduct"
+                  method="post" style="display:inline;">
                 <input type="hidden" name="ProductID" value="<%= p.getProductId() %>" />
-                <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this product?');" />
+                <input type="submit" value="Delete"
+                       onclick="return confirm('Are you sure you want to delete this product?');" />
             </form>
             <%
                 }

@@ -47,7 +47,8 @@ public class LoginServlet extends IoTWebpageBase {
         } catch (SQLException e) {
             throw new ServletException("Database connection error", e);
         }
-
+        HttpSession session = request.getSession();
+        session.setAttribute("dao", dao);
         CustomerDBManager customerDB = dao.customers();
         StaffDBManager    staffDB    = dao.staff();
 

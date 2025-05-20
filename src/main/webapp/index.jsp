@@ -41,11 +41,10 @@
         </div>
         <div class="navLinks right">
             <a href="<%= ctx %>/shop.jsp">Shop</a>
+            <a href="<%= ctx %>/ListProducts">Listing</a>
             <% if (user == null) { %>
             <a href="<%= ctx %>/LoginServlet">Login</a>
             <a href="<%= ctx %>/RegisterServlet">Register</a>
-            <a href="<%= ctx %>/Listing.jsp">Listing</a>
-
             <% } else { %>
             <!-- Hard-coded Profile links -->
             <a href="<%= ctx %>/Profile.jsp">Update Profile</a>
