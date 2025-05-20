@@ -4,6 +4,7 @@ PRAGMA foreign_keys = ON;
 DROP TABLE IF EXISTS CUSTOMERS;
 DROP TABLE IF EXISTS SHIPMENTS;
 DROP TABLE IF EXISTS ORDERS;
+DROP TABLE IF EXISTS ORDERLINEITEM;
 
 -- 1) Create CUSTOMERS
 CREATE TABLE CUSTOMERS (
@@ -149,3 +150,43 @@ INSERT INTO CUSTOMERS (
              '99', 'Testers Ave', 'Testville', '9999', 'Testcity',
              '0411999999', '1234567890123456', '999', 'Test User', '12/30'
          );
+CREATE TABLE ORDERLINEITEM (
+                               ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                               ORDERID INTEGER NOT NULL,
+                               OWNER TEXT NOT NULL,
+                               QUANTITY INTEGER NOT NULL,
+                               TOTALCOST REAL NOT NULL
+);
+INSERT INTO ORDERLINEITEM (
+    ORDERID, OWNER, QUANTITY, TOTALCOST
+) VALUES (
+             1, 'test@gmail.com', 2, 55.00
+         );
+-- Drop old STAFF table if exists
+DROP TABLE IF EXISTS STAFF;
+
+-- Create STAFF table
+CREATE TABLE STAFF (
+                       STAFFID      INTEGER PRIMARY KEY AUTOINCREMENT,
+                       FIRSTNAME    TEXT NOT NULL,
+                       LASTNAME     TEXT NOT NULL,
+                       EMAIL        TEXT UNIQUE NOT NULL,
+                       PASSWORD     TEXT NOT NULL,
+                       ROLE         TEXT NOT NULL,
+                       PHONENUMBER  TEXT,
+                       STREETNUMBER TEXT,
+                       STREETNAME   TEXT,
+                       SUBURB       TEXT,
+                       POSTCODE     TEXT,
+                       CITY         TEXT
+);
+
+-- Insert dummy staff data
+INSERT INTO STAFF (
+    FIRSTNAME, LASTNAME, EMAIL, PASSWORD, ROLE, PHONENUMBER,
+    STREETNUMBER, STREETNAME, SUBURB, POSTCODE, CITY
+) VALUES
+      ('John', 'Doe', 'john.doe@example.com', 'pass123', 'Admin', '0411000001', '12', 'King St', 'Sydney', '2000', 'Sydney'),
+      ('Jane', 'Smith', 'jane.smith@example.com', 'pass456', 'Support', '0411000002', '88', 'Queen Ave', 'Melbourne', '3000', 'Melbourne'),
+      ('Mark', 'Taylor', 'mark.taylor@example.com', 'pass789', 'Manager', '0411000003', '7', 'George Rd', 'Brisbane', '4000', 'Brisbane'),
+      ('Lucy', 'Brown', 'lucy.brown@example.com', 'passabc', 'Support', '0411000004', '34', 'Prince Ln', 'Perth', '6000', 'Perth');

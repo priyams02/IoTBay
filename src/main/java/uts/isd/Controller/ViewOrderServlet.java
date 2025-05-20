@@ -78,4 +78,11 @@ public class ViewOrderServlet extends HttpServlet {
             req.getRequestDispatcher("orders.jsp").forward(req, resp);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        // Simply handle POST as GET (e.g. form submits for order search)
+        doGet(req, resp);
+    }
 }

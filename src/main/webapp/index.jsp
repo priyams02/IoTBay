@@ -9,7 +9,6 @@
     // Grab the logged-in user
     User user = (User) session.getAttribute("loggedInUser");
 
-    // Lazy-init a CustomerDBManager if needed
     CustomerDBManager db = (CustomerDBManager) session.getAttribute("db");
     if (db == null) {
         try {
