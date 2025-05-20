@@ -38,12 +38,6 @@ INSERT INTO PRODUCTS (PRODUCTID, PRODUCTNAME, CATEGORY, PRICE, STOCK) VALUES
                                                                           ('P005', 'Gaming Keyboard', 'Gaming', 129.50, 40);
 
 -- ORDERLINEITEM (simulate cart or order items)
-INSERT INTO ORDERLINEITEM (USERID, PRODUCTID, QUANTITY) VALUES
-                                                            (1, 'P001', 1),
-                                                            (1, 'P002', 2),
-                                                            (2, 'P003', 1),
-                                                            (3, 'P004', 5),
-                                                            (3, 'P005', 1);
 
 -- ORDERS (assumes 3 customers with IDs 1–3)
 INSERT INTO ORDERS (USERID, PRICE, STATUS, PRODUCTS, QUANTITY, ADDRESS_ID, PAYMENT_ID) VALUES

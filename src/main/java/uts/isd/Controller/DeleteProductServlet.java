@@ -61,7 +61,7 @@ public class DeleteProductServlet extends IoTWebpageBase {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward to the admin delete page
-        request.getRequestDispatcher("IoTCore/StaffControlPanel/DeleteProduct.jsp").forward(request, response);
+        request.getRequestDispatcher("DeleteProduct.jsp").forward(request, response);
     }
 
     /** Null-safe trim */
@@ -73,6 +73,6 @@ public class DeleteProductServlet extends IoTWebpageBase {
     private void redirectWithParam(HttpServletResponse response, String key, String val)
             throws IOException {
         String enc = URLEncoder.encode(val, StandardCharsets.UTF_8);
-        response.sendRedirect("IoTCore/StaffControlPanel/DeleteProduct.jsp?" + key + "=" + enc);
+        response.sendRedirect("/DeleteProduct.jsp?" + key + "=" + enc);
     }
 }

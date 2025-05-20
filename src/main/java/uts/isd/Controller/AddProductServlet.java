@@ -26,7 +26,7 @@ public class AddProductServlet extends IoTWebpageBase {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward to the Add Product JSP form
-        request.getRequestDispatcher("IoTCore/StaffControlPanel/AddProduct.jsp")
+        request.getRequestDispatcher("/AddProduct.jsp")
                 .forward(request, response);
     }
 
@@ -89,6 +89,6 @@ public class AddProductServlet extends IoTWebpageBase {
     private void redirectWithParam(HttpServletResponse response, String key, String val)
             throws IOException {
         String encoded = URLEncoder.encode(val, StandardCharsets.UTF_8);
-        response.sendRedirect("IoTCore/StaffControlPanel/AddProduct.jsp?" + key + "=" + encoded);
+        response.sendRedirect("/AddProduct.jsp?" + key + "=" + encoded);
     }
 }

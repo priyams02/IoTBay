@@ -26,7 +26,7 @@ public class SearchProductServlet extends IoTWebpageBase {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward to listing page for initial display or previous results
-        request.getRequestDispatcher("IoTCore/Listing.jsp").forward(request, response);
+        request.getRequestDispatcher("/Listing.jsp").forward(request, response);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SearchProductServlet extends IoTWebpageBase {
 
             // Redirect to listing page with the search parameter
             String encoded = URLEncoder.encode(params, StandardCharsets.UTF_8);
-            response.sendRedirect("IoTCore/Listing.jsp?param=" + encoded);
+            response.sendRedirect("/Listing.jsp?param=" + encoded);
         } catch (SQLException e) {
             throw new ServletException("Unable to search products", e);
         }
@@ -67,6 +67,6 @@ public class SearchProductServlet extends IoTWebpageBase {
     private void redirectWithParam(HttpServletResponse response, String key, String val)
             throws IOException {
         String encoded = URLEncoder.encode(val, StandardCharsets.UTF_8);
-        response.sendRedirect("IoTCore/Listing.jsp?" + key + "=" + encoded);
+        response.sendRedirect("/Listing.jsp?" + key + "=" + encoded);
     }
 }

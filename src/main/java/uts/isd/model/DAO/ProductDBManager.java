@@ -143,8 +143,29 @@ public class ProductDBManager extends AbstractDBManager<Product> {
         int stock       = rs.getInt("STOCK");
         return new Product(id, name, category, price, stock);
     }
-
-
+    public List<Product> search(String name, String category) throws SQLException {
+        String sql = "SELECT * FROM PRODUCTS WHERE UPPER(PRODUCTNAME) LIKE UPPER(?) AND UPPER(CATEGORY) LIKE UPPER(?)";
+        List<Product> results = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + name + "%");
+            ps.setString(2, "%" + category + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    results.add(resultSetToProduct(rs));
+                }
+            }
+        }
+        return results;
+    }
+    public boolean exists(String productId) throws SQLException {
+        String sql = "SELECT 1 FROM PRODUCTS WHERE PRODUCTID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
     private String clamp(String s, int max) {
         if (s == null) return null;
         return s.length() <= max ? s : s.substring(0, max);
