@@ -49,7 +49,7 @@
             <img src="<%= ctx %>/Images/SmartSensor.png" alt="Smart Sensor">
             <h3>Smart Sensor</h3>
             <p>High precision sensor for your IoT applications.</p>
-            <form action="<%= ctx %>/Orders" method="post">
+            <form action="<%= ctx %>/Checkout" method="post">
                 <input type="hidden" name="action" value="order"/>
                 <input type="hidden" name="productID" value="1" />
                 <label>Quantity:</label>
@@ -62,7 +62,7 @@
             <img src="<%= ctx %>/Images/IoTHubM3.png" alt="IoT Hub">
             <h3>IoT Hub</h3>
             <p>Centralized device management and connectivity.</p>
-            <form action="<%= ctx %>/Orders" method="post">
+            <form action="<%= ctx %>/Checkout" method="post">
                 <input type="hidden" name="action" value="order"/>
                 <input type="hidden" name="productID" value="2" />
                 <label>Quantity:</label>
@@ -75,7 +75,7 @@
             <img src="<%= ctx %>/Images/LEDLight.png" alt="Smart Light">
             <h3>Smart Light</h3>
             <p>Adjustable smart lighting for energy savings.</p>
-            <form action="<%= ctx %>/Orders" method="post">
+            <form action="<%= ctx %>/Checkout" method="post">
                 <input type="hidden" name="action" value="order"/>
                 <input type="hidden" name="productID" value="3" />
                 <label>Quantity:</label>
@@ -88,7 +88,7 @@
             <img src="<%= ctx %>/Images/SecurityCamera.png" alt="Security Camera">
             <h3>Security Camera</h3>
             <p>High definition camera with remote monitoring.</p>
-            <form action="<%= ctx %>/Orders" method="post">
+            <form action="<%= ctx %>/Checkout" method="post">
                 <input type="hidden" name="action" value="order"/>
                 <input type="hidden" name="productID" value="4" />
                 <label>Quantity:</label>

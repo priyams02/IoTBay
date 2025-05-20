@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "Checkout", urlPatterns = {"/Checkout", "/Orders"})
+@WebServlet(name = "Checkout", urlPatterns = {"/Checkout"})
 public class CheckoutServlet extends IoTWebpageBase {
 
     @Override

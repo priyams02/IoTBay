@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "ViewOrderServlet", urlPatterns = "/Orders")
+@WebServlet(name = "ViewOrderServlet", urlPatterns = {"/Orders", "/ViewOrders"})
 public class ViewOrderServlet extends HttpServlet {
 
     private DAO ensureDAO(HttpServletRequest req) throws ServletException {
