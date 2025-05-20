@@ -62,7 +62,8 @@ public class ServletTests {
         when(dao.AccessLogs().findByEmail("test@example.com")).thenReturn(mockLogs);
 
         ViewProfileServlet servlet = new ViewProfileServlet() {
-            private DAO createDAO() { return dao; }
+            @Override
+            protected DAO createDAO() { return dao; }
         };
 
         servlet.doGet(request, response);
@@ -98,7 +99,8 @@ public class ServletTests {
         doNothing().when(customerDB).add(any());
 
         RegisterServlet servlet = new RegisterServlet() {
-            private DAO createDAO() { return dao; }
+            @Override
+            protected DAO createDAO() { return dao; }
         };
 
         servlet.doPost(request, response);
@@ -178,4 +180,3 @@ public class ServletTests {
         verify(session).invalidate();
         verify(response).sendRedirect("/app/index.jsp");
     }
-}
