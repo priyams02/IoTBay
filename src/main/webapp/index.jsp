@@ -1,9 +1,10 @@
 <%@ page import="uts.isd.model.Person.User" %>
 <%@ page import="uts.isd.model.Person.Address" %>
 <%@ page import="uts.isd.model.Person.Staff" %>
-<%@ page import="uts.classes.DAO.DBConnector" %>
-<%@ page import="uts.classes.DAO.DBManager" %>
+<%@ page import="uts.isd.model.DAO.DBConnector" %>
+<%@ page import="uts.isd.model.DAO.DAO" %>
 <%@ page import="java.sql.SQLException" %>
+
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -11,10 +12,10 @@
     // Retrieve the logged-in user from session
     User user = (User) session.getAttribute("loggedInUser");
     //DB Manager
-    DBManager db = (DBManager) session.getAttribute("db");
+    DAO db = (DAO) session.getAttribute("db");
     if (db == null) {
         try {
-            db = new DBManager(new DBConnector().getConnection());
+            db = new DAO(new DBConnector().getConnection());
             session.setAttribute("db", db);
         } catch (SQLException e) {
             System.out.println("Failed to connect to database");
@@ -72,16 +73,16 @@
                         String lastName = active.getLastName();
 
                         if (firstName != null && lastName != null) {
-                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
+                            System.out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
                         } else {
-                            out.println("<h1>Hello Customer!</h1>");
+                            System.out.println("<h1>Hello Customer!</h1>");
                         }
 
-                        out.println("<br><p class=\"text\">");
-                        out.println("Your E-Mail Address is: " + active.getEmail());
-                        out.println("<br>");
-                        out.println("Your Password is: " + active.getPassword());
-                        out.println("</p>");
+                        System.out.println("<br><p class=\"text\">");
+                        System.out.println("Your E-Mail Address is: " + active.getEmail());
+                        System.out.println("<br>");
+                        System.out.println("Your Password is: " + active.getPassword());
+                        System.out.println("</p>");
                     }
                 } catch (ClassCastException c) {
                     Staff active = (Staff) session.getAttribute("User");
@@ -90,15 +91,15 @@
                         String lastName = active.getLastName();
 
                         if (firstName != null && lastName != null) {
-                            out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
+                            System.out.println("<h1>Hello, " + firstName + " " + lastName + "!</h1>");
                         } else {
-                            out.println("<h1>Hello!</h1>");
+                            System.out.println("<h1>Hello!</h1>");
                         }
 
-                        out.println("<br><p class=\"text\">");
-                        out.println("Your E-Mail Address is: " + active.getEmail());
-                        out.println("<br>");
-                        out.println("Your Password is: " + active.getPassword());
+                        System.out.println("<br><p class=\"text\">");
+                        System.out.println("Your E-Mail Address is: " + active.getEmail());
+                        System.out.println("<br>");
+                        System.out.println("Your Password is: " + active.getPassword());
                     }
                 }
             %>
