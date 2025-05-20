@@ -6,10 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import uts.isd.Controller.Core.IoTWebpageBase;
-import uts.isd.model.DAO.DAO;
-import uts.isd.model.DAO.CustomerDBManager;
-import uts.isd.model.DAO.StaffDBManager;
-import uts.isd.model.DAO.ProductDBManager;
+import uts.isd.model.DAO.*;
+import uts.isd.model.Order;
+import uts.isd.model.OrderLineItem;
 import uts.isd.model.Person.Address;
 import uts.isd.model.Person.Customer;
 import uts.isd.model.Person.PaymentInformation;
@@ -21,9 +20,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
-/**
- * Servlet for updating customer, staff, and product records.
- */
 @WebServlet(name = "Update", urlPatterns = "/Update")
 public class UpdateOrderServlet extends IoTWebpageBase {
 
@@ -32,96 +28,115 @@ public class UpdateOrderServlet extends IoTWebpageBase {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         DAO dao = (DAO) session.getAttribute("dao");
-        if (dao == null) {
-            throw new ServletException("DAO not initialized in session");
+        if (dao == null) throw new ServletException("DAO not initialized in session");
+
+        // Common email param used for both orders and customers
+        String email = trim(request.getParameter("email"));
+        String orderIdStr = trim(request.getParameter("orderId"));
+        String newStatus = trim(request.getParameter("status"));
+
+        // 🟡 Order status update
+        if (orderIdStr != null && !orderIdStr.isEmpty() && newStatus != null && !newStatus.isEmpty()) {
+            try {
+                int orderId = Integer.parseInt(orderIdStr);
+                Order existingOrder = dao.orders().findOrder(orderId, email);
+                if (existingOrder != null && "Pending".equalsIgnoreCase(existingOrder.getStatus())) {
+                    Order updatedOrder = new Order(
+                            existingOrder.getId(),
+                            existingOrder.getOwner(),
+                            existingOrder.getProducts(),
+                            existingOrder.getTotalCost(),
+                            newStatus,
+                            existingOrder.getAddress(),
+                            existingOrder.getPaymentInformation()
+                    );
+                    dao.orders().update(existingOrder, updatedOrder);
+                    response.sendRedirect("Orders.jsp?msg=Order updated");
+                    return;
+                } else {
+                    response.sendRedirect("Orders.jsp?msg=Order not editable");
+                    return;
+                }
+            } catch (Exception e) {
+                throw new ServletException("Order update failed", e);
+            }
         }
+
+        // 🟡 Customer/Product/Staff logic (Unrelated to Order)
         CustomerDBManager customerDB = dao.customers();
-        StaffDBManager    staffDB    = dao.staff();
-        ProductDBManager  productDB  = dao.products();
+        StaffDBManager staffDB = dao.staff();
+        ProductDBManager productDB = dao.products();
 
         String firstName = trim(request.getParameter("First"));
-        String lastName  = trim(request.getParameter("Last"));
-        String email     = trim(request.getParameter("Email")).toLowerCase();
+        String lastName = trim(request.getParameter("Last"));
 
-        // Redirect to customer edit form
         if (request.getParameter("Update") != null) {
-            redirect(response,
-                    "IoTCore/StaffControlPanel/CustomerProfileUpdator.jsp?Email=" +
-                            URLEncoder.encode(email, StandardCharsets.UTF_8)
-            );
+            redirect(response, "StaffControlPanel/CustomerProfileUpdator.jsp?Email=" +
+                    URLEncoder.encode(email, StandardCharsets.UTF_8));
             return;
         }
 
-        // Remove customer
         if (request.getParameter("Remove") != null) {
             try {
                 Customer c = customerDB.findCustomer(email);
                 if (c != null) customerDB.delete(c);
-                redirectWithParam(response,
-                        "IoTCore/StaffControlPanel/SeeEditCustomers.jsp?",
-                        "upd","Customer Removed!"
-                );
+                redirectWithParam(response, "StaffControlPanel/SeeEditCustomers.jsp?", "upd", "Customer Removed!");
             } catch (SQLException e) {
                 throw new ServletException("Failed to remove customer", e);
             }
             return;
         }
 
-        // Common params
         String attribute = trim(request.getParameter("Attribute"));
-        boolean isCustomer   = "yes".equals(request.getParameter("bIsCustomer"));
-        boolean fromStaff    = request.getParameter("CalledFromStaff") != null;
-        String redirectBase  = fromStaff
-                ? "IoTCore/StaffControlPanel/SeeEditCustomers.jsp?"
-                : "IoTCore/Profile.jsp?";
+        boolean isCustomer = "yes".equals(request.getParameter("bIsCustomer"));
+        boolean fromStaff = request.getParameter("CalledFromStaff") != null;
+        String redirectBase = fromStaff
+                ? "StaffControlPanel/SeeEditCustomers.jsp?"
+                : "Profile.jsp?";
 
         try {
             if (isCustomer) {
-                // Determine which customer to update
                 String keyEmail = fromStaff
                         ? trim(request.getParameter("originalEmail")).toLowerCase()
-                        : ((Customer)session.getAttribute("loggedInUser")).getEmail();
+                        : ((Customer) session.getAttribute("loggedInUser")).getEmail();
                 Customer current = customerDB.findCustomer(keyEmail);
                 if (current == null) {
-                    redirectWithParam(response, redirectBase, "err","Customer not found");
+                    redirectWithParam(response, redirectBase, "err", "Customer not found");
                     return;
                 }
-                // Fetch address and payment
+
                 Address a = current.getAddress();
                 PaymentInformation p = current.getPaymentInfo();
-                // Build updated customer template
                 Customer updated = new Customer(
                         firstName.isEmpty() ? current.getFirstName() : firstName,
                         lastName.isEmpty()  ? current.getLastName()  : lastName,
                         current.getPassword(),
-                        email.isEmpty()      ? current.getEmail()     : email,
+                        email.isEmpty()     ? current.getEmail()     : email,
                         a, current.getPhoneNumber(), Customer.UserType.CUSTOMER
                 );
                 updated.setPaymentInfo(p);
 
                 switch (attribute) {
                     case "Names":
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "Password":
                         String pw1 = trim(request.getParameter("Pass1"));
                         String pw2 = trim(request.getParameter("Pass2"));
                         if (!pw1.equals(pw2)) {
-                            redirectWithParam(response, redirectBase, "err","Passwords did not match"); return;
+                            redirectWithParam(response, redirectBase, "err", "Passwords did not match");
+                            return;
                         }
                         updated.setPassword(pw1);
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "Email":
                         if (customerDB.findCustomer(updated.getEmail()) != null) {
-                            redirectWithParam(response, redirectBase, "err","Email in use"); return;
+                            redirectWithParam(response, redirectBase, "err", "Email in use");
+                            return;
                         }
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "PhoneNumber":
                         updated.setPhoneNumber(trim(request.getParameter("PhoneNumber")));
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "Address":
                         Address na = new Address(
                                 trim(request.getParameter("addNum")),
@@ -135,8 +150,7 @@ public class UpdateOrderServlet extends IoTWebpageBase {
                                 updated.getEmail(), na, updated.getPhoneNumber(), Customer.UserType.CUSTOMER
                         );
                         updated.setPaymentInfo(p);
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "PaymentInformation":
                         PaymentInformation np = new PaymentInformation(
                                 trim(request.getParameter("CardNo")),
@@ -145,26 +159,21 @@ public class UpdateOrderServlet extends IoTWebpageBase {
                                 null
                         );
                         updated.setPaymentInfo(np);
-                        customerDB.update(current, updated);
-                        break;
+                        customerDB.update(current, updated); break;
                     case "Product":
-                        // Product update handled below for staff
                         break;
                     default:
-                        // No-op
+                        // Do nothing
                 }
+
                 if (!attribute.equals("Product")) {
-                    // Refresh session if customer
                     if (!fromStaff) session.setAttribute("loggedInUser", updated);
                     redirectWithParam(response, redirectBase, "upd", attribute + " Updated!");
                     return;
                 }
             }
 
-            // Staff branch or product update
-            String attr = attribute;
-            if ("Product".equals(attr) || !isCustomer) {
-                // Product update case
+            if ("Product".equals(attribute) || !isCustomer) {
                 String pidStr = trim(request.getParameter("pid"));
                 int pid = Integer.parseInt(pidStr);
                 Product prod = productDB.findProduct(String.valueOf(pid));
@@ -178,9 +187,7 @@ public class UpdateOrderServlet extends IoTWebpageBase {
                 productDB.update(prod, updatedP);
                 redirectToRedirector(response,
                         name + " Updated!",
-                        "Please wait while we redirect you..."
-                );
-                return;
+                        "Please wait while we redirect you...");
             }
 
         } catch (SQLException e) {
@@ -188,17 +195,14 @@ public class UpdateOrderServlet extends IoTWebpageBase {
         }
     }
 
-    /** Null-safe trim */
     private String trim(String s) {
         return (s == null ? "" : s.trim());
     }
 
-    /** Redirect helper */
     private void redirect(HttpServletResponse resp, String url) throws IOException {
         resp.sendRedirect(url);
     }
 
-    /** Redirect with one param */
     private void redirectWithParam(HttpServletResponse resp, String base,
                                    String key, String val) throws IOException {
         String url = base + (base.contains("?") ? "&" : "?")
@@ -206,10 +210,9 @@ public class UpdateOrderServlet extends IoTWebpageBase {
         resp.sendRedirect(url);
     }
 
-    /** Redirect to Redirector.jsp */
     private void redirectToRedirector(HttpServletResponse resp,
                                       String heading, String message) throws IOException {
-        String url = "IoTCore/Redirector.jsp?HeadingMessage="
+        String url = "Redirector.jsp?HeadingMessage="
                 + URLEncoder.encode(heading, StandardCharsets.UTF_8)
                 + "&Message=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
         resp.sendRedirect(url);
@@ -218,7 +221,6 @@ public class UpdateOrderServlet extends IoTWebpageBase {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Not used; all updates via POST
         resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 }

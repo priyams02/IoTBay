@@ -21,16 +21,12 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         super(connection);
     }
 
-    /**
-     * Places an order: inserts into ORDERS, decrements stock, and clears cart.
-     */
     public Order makeOrder(
             String owner,
             List<OrderLineItem> cartItems,
             Address address,
             PaymentInformation pi
     ) throws SQLException {
-        // 1) Calculate total cost and build pids/quas strings for storage
         float totalCost = 0f;
         StringBuilder pids = new StringBuilder();
         StringBuilder quas = new StringBuilder();
@@ -38,13 +34,12 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         ProductDBManager prodDao = new ProductDBManager(connection);
         for (OrderLineItem oli : cartItems) {
             Product p = oli.getProduct();
-            // productId stored as string
             String prodId = p.getProductId();
             int quantity = oli.getQuantity();
             pids.append(prodId).append(":");
             quas.append(quantity).append(":");
             totalCost += (float) oli.getTotalCost();
-            // Decrement stock
+
             int newStock = p.getStock() - quantity;
             Product updated = new Product(
                     prodId,
@@ -56,7 +51,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
             prodDao.update(p, updated);
         }
 
-        // 2) Insert into ORDERS table
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String purchaseDate = dtf.format(LocalDateTime.now());
 
@@ -85,9 +79,7 @@ public class OrderDBManager extends AbstractDBManager<Order> {
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
                     int orderId = keys.getInt(1);
-                    // 3) Clear the customer's cart
                     new CartDBManager(connection).clear(owner);
-                    // 4) Return the newly created Order
                     return findOrder(orderId, owner);
                 }
             }
@@ -95,9 +87,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         return null;
     }
 
-    /**
-     * Finds an order by ID and owner.
-     */
     public Order findOrder(int orderId, String owner) throws SQLException {
         String sql = "SELECT * FROM ORDERS WHERE ORDERID = ? AND OWNER = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -112,9 +101,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         return null;
     }
 
-    /**
-     * Lists orders for a given owner.
-     */
     public List<Order> listByOwner(String owner) throws SQLException {
         String sql = "SELECT * FROM ORDERS WHERE OWNER = ?";
         List<Order> orders = new ArrayList<>();
@@ -129,9 +115,22 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         return orders;
     }
 
-    /**
-     * Cancels an order: restores stock using the OrderLineItem list and updates status.
-     */
+    // ✅ NEW: Search orders by date
+    public List<Order> findOrdersByDate(String owner, String date) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM ORDERS WHERE OWNER = ? AND DATE(PURCHASEDATE) = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, owner.toLowerCase());
+            ps.setString(2, date); // Format must be YYYY-MM-DD
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(resultSetToOrder(rs));
+                }
+            }
+        }
+        return orders;
+    }
+
     public void cancelOrder(int orderId, String owner) throws SQLException {
         Order order = findOrder(orderId, owner);
         if (order == null) return;
@@ -159,7 +158,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         }
     }
 
-    // Unsupported CRUD
     @Override public Order add(Order o) throws SQLException {
         throw new UnsupportedOperationException("Use makeOrder instead");
     }
@@ -173,9 +171,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
         throw new UnsupportedOperationException("Physical delete not supported");
     }
 
-    /**
-     * Maps a result row to an Order.
-     */
     private Order resultSetToOrder(ResultSet r) throws SQLException {
         int id = r.getInt("ORDERID");
         Customer owner = new CustomerDBManager(connection)
@@ -196,7 +191,6 @@ public class OrderDBManager extends AbstractDBManager<Order> {
                 r.getString("CARDHOLDER"),
                 null
         );
-        // Fetch cart items for this order
         List<OrderLineItem> items = new CartDBManager(connection)
                 .listCart(owner.getEmail());
         return new Order(id, owner, new ArrayList<>(items), price, status, addr, pi);

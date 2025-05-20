@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import uts.isd.Controller.Core.IoTWebpageBase;
 import uts.isd.model.DAO.DAO;
-import uts.isd.model.DAO.ShipmentDBManager;
 import uts.isd.model.Person.Address;
 import uts.isd.model.Shipment;
 
@@ -37,11 +36,11 @@ public class CreateShipmentServlet extends IoTWebpageBase {
             String opts   = req.getParameter("shippingOptions");
 
             DAO dao = new DAO();
-            ShipmentDBManager mgr = dao.shipments();
-            mgr.add(new Shipment(orderId, dest, status, opts));
+            // use the new convenience method:
+            dao.addShipment(new Shipment(orderId, dest, status, opts));
 
             resp.sendRedirect(ctx + "/Shipment/List?orderId=" + orderId);
-        } catch (NumberFormatException|SQLException e) {
+        } catch (NumberFormatException | SQLException e) {
             throw new ServletException("Failed to create shipment", e);
         }
     }
