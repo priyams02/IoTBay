@@ -28,7 +28,7 @@ public class DeletePaymentDetailsServlet extends IoTWebpageBase {
         if (dao == null) {
             throw new ServletException("DAO not initialized in session");
         }
-        String email =  req.getParameter("Email");
+        String email = (String) req.getAttribute("Email");
         CustomerDBManager customerDB = dao.customers();
         try {
             Customer current = customerDB.findCustomer(email);
@@ -47,6 +47,7 @@ public class DeletePaymentDetailsServlet extends IoTWebpageBase {
             session.setAttribute("CVV", null);
             session.setAttribute("cardHolder", null);
             resp.sendRedirect(req.getContextPath() + "/checkout.jsp");
+
 
         } catch (SQLException e) {
             throw new ServletException("Delete failed", e);

@@ -51,8 +51,11 @@
 <form action="<%= ctx %>/editPaymentDetails.jsp">
     <button type="submit">Edit Payment Details</button>
 </form>
-<form action="<%= ctx %>/DeletePaymentDetails">
+<form action="<%= ctx %>/DeletePaymentDetailsServlet">
     <button type="submit">Delete Payment Details</button>
+</form>
+<form method="post" action="<%= ctx %>/Checkout">
+    <button type="submit">Place Order</button>
 </form>
 <%}%>
 </body>
