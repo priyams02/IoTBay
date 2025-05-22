@@ -3,6 +3,7 @@
 <%@ page import="uts.isd.model.Person.PaymentInformation" %>
 <%@ page import="uts.isd.model.Person.Address" %>
 <%
+    String err = (String) session.getAttribute("err");
     String ctx = request.getContextPath();
     User user = (User) session.getAttribute("loggedInUser");
     PaymentInformation paymentInformation = user.getPaymentInfo();
@@ -23,6 +24,9 @@
         </div>
     </nav>
 </div>
+<% if (err != null) { %>
+<p style="text-align:center; color:red"><%= err %></p>
+<% } %>
 <%if (user == null || user.getPaymentInfo() == null) {%>
 <h1>Checkout</h1>
 <form method="post" action="<%= ctx %>/Checkout">

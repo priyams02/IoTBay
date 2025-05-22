@@ -4,12 +4,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import uts.isd.Controller.Core.IoTWebpageBase;
+import uts.isd.model.DAO.CustomerDBManager;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.CartDBManager;
 import uts.isd.model.DAO.OrderDBManager;
 import uts.isd.model.Order;
 import uts.isd.model.OrderLineItem;
 import uts.isd.model.Person.Address;
+import uts.isd.model.Person.Customer;
 import uts.isd.model.Person.PaymentInformation;
 
 import java.io.IOException;
@@ -64,6 +66,7 @@ public class CheckoutServlet extends IoTWebpageBase {
 
         CartDBManager cartDB   = dao.cart();
         OrderDBManager orderDB = dao.orders();
+        CustomerDBManager customerDB = dao.customers();
 
         // 1) pull & trim form fields
         String email           = trim(request.getParameter("email"));
@@ -82,6 +85,15 @@ public class CheckoutServlet extends IoTWebpageBase {
                 cardNo.isEmpty() || cvv.isEmpty() || cardHolder.isEmpty()) {
             String err = URLEncoder.encode("All fields are required", StandardCharsets.UTF_8);
             response.sendRedirect(request.getContextPath() + "/checkout.jsp?err=" + err);
+            return;
+        }
+
+        String error = validateCheckout(customerDB, email, num, street, suburb,
+                postcode, city, cardNo, cvv, cardHolder);
+        if (error != null) {
+            request.setAttribute("err", error);
+            request.getRequestDispatcher("/register.jsp")
+                    .forward(request, response);
             return;
         }
 
@@ -124,4 +136,43 @@ public class CheckoutServlet extends IoTWebpageBase {
     private String trim(String s) {
         return (s == null ? "" : s.trim());
     }
+
+    /** Redirect with URL-encoded param to Orders page */
+    private void redirectWithParam(HttpServletResponse response, String key, String val)
+            throws IOException {
+        String enc = URLEncoder.encode(val, StandardCharsets.UTF_8);
+        response.sendRedirect("IoTCore/Orders.jsp?" + key + "=" + enc);
+    }
+
+    private String validateCheckout(CustomerDBManager customerDB, String email, String addressNum,
+                                    String addressStreet, String addressSuburb, String addressPostcode,
+                                    String addressCity, String cardNo, String cvv, String cardHolder) {
+
+        if (Validator.containsLetter(addressNum)) {
+            return "Address numbers must not contain letters!";
+        }
+        if (Validator.containsNumber(addressStreet)) {
+            return "Street names must not contain numbers!";
+        }
+        if (Validator.containsNumber(addressSuburb)) {
+            return "Suburb names must not contain numbers!";
+        }
+        if (Validator.containsLetter(addressPostcode)) {
+            return "Postcode names must not contain letters!";
+        }
+        if (Validator.containsNumber(addressCity)) {
+            return "City names must not contain numbers!";
+        }
+        if (Validator.containsLetter(cardNo)) {
+            return "Card numbers must not contain letters!";
+        }
+        if (Validator.containsLetter(cvv)) {
+            return "CVV must not contain letters!";
+        }
+        if (Validator.containsNumber(cardHolder)) {
+            return "Card holder names must not contain numbers!";
+        }
+        return null;
+    }
+
 }
