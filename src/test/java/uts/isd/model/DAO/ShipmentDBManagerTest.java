@@ -82,4 +82,23 @@ public class ShipmentDBManagerTest extends TestCase {
         List<Shipment> after = mgr.listByOrder(99);
         assertTrue("No shipments after delete", after.isEmpty());
     }
+
+    /** New: requesting non-existent ID returns null */
+    public void testFindByIdNonexistent() throws Exception {
+        Shipment none = mgr.findById(9999);
+        assertNull("findById on missing record should return null", none);
+    }
+
+    /** New: multiple shipments for same order should all be listed */
+    public void testListByOrderMultiple() throws Exception {
+        Address addr = new Address("1", "First Ave", "Town", "1000", "City");
+        mgr.add(new Shipment(50, addr, "S1", "Opt1"));
+        mgr.add(new Shipment(50, addr, "S2", "Opt2"));
+
+        List<Shipment> list = mgr.listByOrder(50);
+        assertEquals("Should list both shipments", 2, list.size());
+        // check they have distinct statuses
+        assertTrue(list.stream().anyMatch(s -> "S1".equals(s.getStatus())));
+        assertTrue(list.stream().anyMatch(s -> "S2".equals(s.getStatus())));
+    }
 }
