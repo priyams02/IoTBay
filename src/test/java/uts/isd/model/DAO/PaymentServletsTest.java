@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import org.junit.Test;
 import org.mockito.Mockito;
 import uts.isd.Controller.CheckoutServlet;
+import uts.isd.Controller.EditPaymentDetailsServlet;
+import uts.isd.Controller.DeletePaymentDetailsServlet;
 import uts.isd.model.DAO.DAO;
 import uts.isd.model.DAO.DBConnector;
 import uts.isd.model.Person.User;
@@ -70,7 +72,7 @@ public class PaymentServletsTest {
         when(request.getParameter("CVV")).thenReturn("123");
         when(request.getParameter("CardHolder")).thenReturn("David Lee");
 
-        CheckoutServlet servlet = new CheckoutServlet();
+        EditPaymentDetailsServlet servlet = new EditPaymentDetailsServlet();
         servlet.doPost(request, response);
 
         verify(session).setAttribute(eq("loggedInUser"), any());
@@ -92,7 +94,7 @@ public class PaymentServletsTest {
         when(request.getParameter("CVV")).thenReturn("123");
         when(request.getParameter("CardHolder")).thenReturn("David Lee");
 
-        CheckoutServlet servlet = new CheckoutServlet();
+        EditPaymentDetailsServlet servlet = new EditPaymentDetailsServlet();
         servlet.doPost(request, response);
 
         verify(session).setAttribute(eq("loggedInUser"), any());
@@ -113,7 +115,7 @@ public class PaymentServletsTest {
         when(request.getParameter("CVV")).thenReturn("123");
         when(request.getParameter("CardHolder")).thenReturn("David Lee");
 
-        CheckoutServlet servlet = new CheckoutServlet();
+        DeletePaymentDetailsServlet servlet = new DeletePaymentDetailsServlet();
         servlet.doPost(request, response);
 
         verify(session).setAttribute(eq("loggedInUser"), any());
@@ -134,7 +136,7 @@ public class PaymentServletsTest {
         when(request.getParameter("CVV")).thenReturn("123");
         when(request.getParameter("CardHolder")).thenReturn("David Lee");
 
-        CheckoutServlet servlet = new CheckoutServlet();
+        DeletePaymentDetailsServlet servlet = new DeletePaymentDetailsServlet();
         servlet.doPost(request, response);
 
         verify(session).setAttribute(eq("loggedInUser"), any());
